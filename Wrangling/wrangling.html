@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Part 3. Data Wrangling</title>
+    <meta charset="utf-8">
+    <meta name="author" content="satRday 2018, Cape Town" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="duke_color_pallettes_slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Part 3. Data Wrangling
+## The Sport Statistician’s Toolbox in R
+### satRday 2018, Cape Town
+
+---
+
+
+
+
+
+
+
+# Data Wrangling
+
+.cbox[
+### Data wrangling refers to the process of going from messy data to data that can be analyzed.
+]
+
+---
+
+# Goal of Tidying 
+
+When _tidying_ our goal is to end up with a row-by-column structure of our data, that has clearly named variables and valid values. 
+
+![](tidy_goal.jpeg)
+
+
+---
+
+
+
+# Common Steps with Data Wrangling
+
+- Tidying
+
+- Reshaping
+
+- Selecting
+
+- Mutating
+
+---
+
+# Tidyverse Toolbox
+
+- `stringr`: String manipulation
+
+- `tidyr`: For reshaping data
+
+- `dplyr`: General data wrangling
+
+
+---
+
+# Tidying Unstructured Data 
+
+--
+
+- When scraping Web data, as we often do in sport, the data can be messy.
+
+--
+
+- It is typical to need some programming to get the data into a nice row by column structure
+
+--
+
+- String manipulation is a common task in this processed and can be tackled with the `stringr` package
+
+---
+
+
+# Example: Match Statistics
+
+Recall the example tennis match where we scraped match statistics using `RSelenium`. The extracted data is in a single string, so it is unstructured and needs to be tidied up.
+
+
+```
+## [1] "ATP - SINGLES: Australian Open (Australia), hard - Final\nATP: 1.\nFederer R. 3-2 Nadal R.\n29.01.2017 08:35\nFinished\nATP: 2.\nLive Centre\nOdds Comparison\nH2H\nDraw\n Match Summary\nStatistics\nPoint by Point\n Match\nSet 1\nSet 2\nSet 3\nSet 4\nSet 5\nService\n20\nAces\n4\n3\nDouble Faults\n3\n62%\n1st Serve Percentage\n73%\n76% (65/85)\n1st Serve Points Won\n63% (69/110)\n49% (26/53)\n2nd Serve Points Won\n56% (23/41)\n76% (13/17)\nBreak Points Saved\n70% (14/20)\nReturn\n37% (41/110)\n1st Return Points Won\n24% (20/85)\n37% (15/41)\n2nd Return Points Won\n45% (24/53)\n30% (6/20)\nBreak Points Converted\n24% (4/17)\nPoints\n73\nWinners\n35\n57\nUnforced Errors\n28\n10\nMax Points In Row\n6\n66% (91/138)\nService Points Won\n61% (92/151)\n39% (59/151)\nReturn Points Won\n34% (47/138)\n52% (150/289)\nTotal Points Won\n48% (139/289)\nGames\n5\nMax Games In Row\n4\n82% (18/22)\nService Games Won\n73% (16/22)\n27% (6/22)\nReturn Games Won\n18% (4/22)\n55% (24/44)\nTotal Games Won\n45% (20/44)\n  Pre-match odds\n1\n2.10\n2\n1.70\nBONUS $200\n  Gamble Responsibly. Gambling Therapy. 18+\nclose window"
+```
+
+---
+
+# What Steps Do We Need?
+
+1. Identify the target structure (that is, variables and value types)
+
+2. Split the string into the different variables
+
+3. Extract values
+
+4. Assign to variables in a data.frame
+
+---
+
+# Example: Goal Structure
+
+We have a set of statistics for each player. One option is a long format with the following structure:
+
+
+&lt;br&gt;
+
+&lt;div align="center"&gt;
+&lt;img src="match_stats_table.png" width=60%&gt;
+&lt;/div&gt;
+
+
+---
+
+# Example: Splitting
+
+
+```r
+library(stringr) # Load stingr
+
+str_split(text, "\n") # Split on return characters
+```
+
+```
+## [[1]]
+##  [1] "ATP - SINGLES: Australian Open (Australia), hard - Final"
+##  [2] "ATP: 1."                                                 
+##  [3] "Federer R. 3-2 Nadal R."                                 
+##  [4] "29.01.2017 08:35"                                        
+##  [5] "Finished"                                                
+##  [6] "ATP: 2."                                                 
+##  [7] "Live Centre"                                             
+##  [8] "Odds Comparison"                                         
+##  [9] "H2H"                                                     
+## [10] "Draw"                                                    
+## [11] " Match Summary"                                          
+## [12] "Statistics"                                              
+## [13] "Point by Point"                                          
+## [14] " Match"                                                  
+## [15] "Set 1"                                                   
+## [16] "Set 2"                                                   
+## [17] "Set 3"                                                   
+## [18] "Set 4"                                                   
+## [19] "Set 5"                                                   
+## [20] "Service"                                                 
+## [21] "20"                                                      
+## [22] "Aces"                                                    
+## [23] "4"                                                       
+## [24] "3"                                                       
+## [25] "Double Faults"                                           
+## [26] "3"                                                       
+## [27] "62%"                                                     
+## [28] "1st Serve Percentage"                                    
+## [29] "73%"                                                     
+## [30] "76% (65/85)"                                             
+## [31] "1st Serve Points Won"                                    
+## [32] "63% (69/110)"                                            
+## [33] "49% (26/53)"                                             
+## [34] "2nd Serve Points Won"                                    
+## [35] "56% (23/41)"                                             
+## [36] "76% (13/17)"                                             
+## [37] "Break Points Saved"                                      
+## [38] "70% (14/20)"                                             
+## [39] "Return"                                                  
+## [40] "37% (41/110)"                                            
+## [41] "1st Return Points Won"                                   
+## [42] "24% (20/85)"                                             
+## [43] "37% (15/41)"                                             
+## [44] "2nd Return Points Won"                                   
+## [45] "45% (24/53)"                                             
+## [46] "30% (6/20)"                                              
+## [47] "Break Points Converted"                                  
+## [48] "24% (4/17)"                                              
+## [49] "Points"                                                  
+## [50] "73"                                                      
+## [51] "Winners"                                                 
+## [52] "35"                                                      
+## [53] "57"                                                      
+## [54] "Unforced Errors"                                         
+## [55] "28"                                                      
+## [56] "10"                                                      
+## [57] "Max Points In Row"                                       
+## [58] "6"                                                       
+## [59] "66% (91/138)"                                            
+## [60] "Service Points Won"                                      
+## [61] "61% (92/151)"                                            
+## [62] "39% (59/151)"                                            
+## [63] "Return Points Won"                                       
+## [64] "34% (47/138)"                                            
+## [65] "52% (150/289)"                                           
+## [66] "Total Points Won"                                        
+## [67] "48% (139/289)"                                           
+## [68] "Games"                                                   
+## [69] "5"                                                       
+## [70] "Max Games In Row"                                        
+## [71] "4"                                                       
+## [72] "82% (18/22)"                                             
+## [73] "Service Games Won"                                       
+## [74] "73% (16/22)"                                             
+## [75] "27% (6/22)"                                              
+## [76] "Return Games Won"                                        
+## [77] "18% (4/22)"                                              
+## [78] "55% (24/44)"                                             
+## [79] "Total Games Won"                                         
+## [80] "45% (20/44)"                                             
+## [81] "  Pre-match odds"                                        
+## [82] "1"                                                       
+## [83] "2.10"                                                    
+## [84] "2"                                                       
+## [85] "1.70"                                                    
+## [86] "BONUS $200"                                              
+## [87] "  Gamble Responsibly. Gambling Therapy. 18+"             
+## [88] "close window"
+```
+
+---
+
+# Group Data by Pattern
+
+- Now that we have isolated some of the main elements of our data as a vector, we want to group data by type. 
+
+- We can use pattern-matching to separate strings by their pattern
+
+- Several useful `stringr` packages for pattern matching include:
+
+--
+
+&lt;br&gt;
+
+
+```r
+str_detect(x, pattern) # Test each element for presence of pattern
+
+str_subset(x, pattern) # Subset x by where pattern is found
+
+str_extract(x, pattern) # Extracts first occurrence of pattern
+```
+
+---
+
+# Regular Expressions
+
+- By default, the `pattern` is assumed to be a _regular expression_.
+
+- A *regular expression* describes a pattern in a string and is very powerful for pattern-finding. 
+
+- Find more about `regex` in R [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html)
+
+
+&lt;div align="center"&gt;
+&lt;img src="reg_exp.png" width=60%&gt;
+&lt;/div&gt;
+
+
+---
+
+# Example: Using RegEx to Sort Data
+
+Looking at our example, we can separate the stats by using a pattern that finds elements with at least one lower-case letter for elements from the `Aces` to `Pre-match Odds`.
+
+
+```r
+split &lt;- str_split(text, "\n")[[1]] # Save split vector
+
+# Filter out extraneous elements
+
+split &lt;- split[(which(str_detect(split, "Aces")) - 1):
+                 (which(str_detect(split, "Pre-match odds")) - 1)]
+
+pattern &lt;- "[a-z]"
+
+stats &lt;- str_subset(split, pattern) # Subset players and stat names
+
+stats &lt;- stats[!(stats %in% c("Service", "Return", "Points", "Games"))] # Remove headers
+```
+
+---
+
+# Example: Using RegEx to Sort Data
+
+We use exclusion to get all the other values
+
+
+```r
+values &lt;- split[
+	!str_detect(split, pattern) &amp;
+	!str_detect(split, "[A-Z]")
+ ] # Get values
+```
+
+---
+
+# Example: Structuring Data Frame
+
+We notice that some stats have just counts while others have percentages and ratios. Suppose we only want to retain the percentages, we can do the following to isolate the percentage values using `str_replace`.
+
+
+```r
+values &lt;- str_replace(values, "%.*", "")
+```
+
+---
+
+# Long Format
+
+We could organize our data in a long format by stacking all of the player stats on top of each other.
+
+
+```r
+match_stats &lt;- data.frame(
+  stat = rep(stats, each = 2),
+  value = values,
+  player = c("Player 1", "Player 2")
+)
+
+head(match_stats)
+```
+
+```
+##                   stat value   player
+## 1                 Aces    20 Player 1
+## 2                 Aces     4 Player 2
+## 3        Double Faults     3 Player 1
+## 4        Double Faults     3 Player 2
+## 5 1st Serve Percentage    62 Player 1
+## 6 1st Serve Percentage    73 Player 2
+```
+
+---
+
+# Wide Format
+
+We could create a wide format with a row for each player by using the `spread` function in `tidyr`.
+
+
+```r
+match_stats %&gt;%
+   spread(stat, value)
+```
+
+```
+##     player 1st Return Points Won 1st Serve Percentage 1st Serve Points Won
+## 1 Player 1                    37                   62                   76
+## 2 Player 2                    24                   73                   63
+##   2nd Return Points Won 2nd Serve Points Won Aces Break Points Converted
+## 1                    37                   49   20                     30
+## 2                    45                   56    4                     24
+##   Break Points Saved Double Faults Max Games In Row Max Points In Row
+## 1                 76             3                5                10
+## 2                 70             3                4                 6
+##   Return Games Won Return Points Won Service Games Won Service Points Won
+## 1               27                39                82                 66
+## 2               18                34                73                 61
+##   Total Games Won Total Points Won Unforced Errors Winners
+## 1              55               52              57      73
+## 2              45               48              28      35
+```
+
+---
+
+# Common Pitfalls with Sports Data
+
+When working with sports data from the web, you should always be on the lookout for the following common problems with tidying data: 
+
+- Need for date transformation
+- Need for type conversion
+- Misspelled or alternative names
+- Missing values
+
+---
+
+# Example: Elo Ratings
+
+Recall the Elo Ratings we scraped from the _Tennis Abstract_. Let's have a look at some of the issues above...
+
+
+```r
+library(rvest)
+```
+
+```
+## Loading required package: xml2
+```
+
+```r
+url &lt;- "http://tennisabstract.com/reports/atp_elo_ratings.html"
+
+page &lt;- read_html(url)
+
+# Use table class to extract Elo table
+elo &lt;- page %&gt;%
+    html_nodes("table.tablesorter") %&gt;%
+    html_table()
+
+elo &lt;- elo[[1]]
+```
+
+---
+
+# Missing Data
+
+There are several extraneous columns that crept in with the `html_table`. Let's remove these using pattern-matching on the column names. 
+
+
+```r
+elo &lt;- elo[,str_detect(names(elo), "[A-Z]")]
+```
+
+---
+
+# Type Conversion
+
+If we look at the classes for each variable, we find that some Elo ratings are character when they should all be numeric. Let's use `mutate_at` from `dplyr` to convert these.
+
+
+```r
+elo &lt;- elo %&gt;%
+  dplyr::mutate_at(vars(Elo:Grass), as.numeric)
+```
+
+Note: Some true missing values are introduced.
+
+---
+
+# Question
+
+Are there any peculiarities in the `Player` variable that we should be aware of? How would you find this out?
+
+---
+
+# Cleaning Names
+
+- One of the most troublesome issues with sports data are inconsistent naming of players. This is a problem when you need to assign performance measures to the same individual, based on their name.
+
+
+- Some of the "inconsistencies" you have to be prepared for are:
+
+  - Misspellings
+  - Differences in punctuation
+  - Middle names
+  - Multiple surnames
+  - Abbreviations
+
+---
+
+# agrep
+
+The `agrep` function performs approximate matching, and is a _very_ useful function for cleaning up names in sports data. It looks at the distance between the input `x` and a `pattern`, using the Levenshtein edit distance.
+
+
+```r
+agrep(pattern, x, max.distance = 0.1, costs = NULL, ...) 
+```
+
+&lt;br&gt;
+
+Most of the arguments are like the usual `grep` except for two: `max.distance` and `costs`.
+
+`max.distance`: Numeric for the maximal distance
+
+`costs`: Numeric cost for the Levenshtein edit distance
+
+---
+
+
+# Problem: Checking Names
+
+1. Use `agrep` to inspect the `Player` variable in our Elo dataset.
+
+2. Do you find any names that could be a problem for future analysis?
+
+---
+
+# Solution
+
+It looks like one player has two different names in use.
+
+
+```r
+players &lt;- sort(unique(elo$Player)) # Get unique players
+
+approx &lt;- lapply(players, agrep, fixed = T, x = players) 
+# Compare each player against all others
+
+players[sapply(approx, length) &gt; 1] 
+```
+
+```
+## [1] "Joao Sousa" "Joao Souza"
+```
+
+```r
+# Look for cases with multiple matches
+```
+
+---
+
+# More Conversion
+
+Our inspection of player names also finds that space is represented by a special character. To remove this, we can use the `str_replace` and the unicode representation for the space. 
+
+
+```r
+elo$Player &lt;- str_replace(elo$Player, "\u00A0", " ")
+```
+
+---
+
+# Resources
+
+- [dplyr](https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html)
+  - https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html
+
+- [tidyr](https://blog.rstudio.org/2014/07/22/introducing-tidyr/)
+  - https://blog.rstudio.org/2014/07/22/introducing-tidyr/
+
+- [agrep](http://astrostatistics.psu.edu/su07/R/html/base/html/agrep.html)
+  - http://astrostatistics.psu.edu/su07/R/html/base/html/agrep.html
+
+- [regex](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html)
+  - https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

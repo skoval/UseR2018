@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Part 4. Modelling Sports Data - Forecasting</title>
+    <meta charset="utf-8">
+    <meta name="author" content="satRday 2018, Cape Town" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="duke_color_pallettes_slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Part 4. Modelling Sports Data - Forecasting
+## The Sport Statistician’s Toolbox in R
+### satRday 2018, Cape Town
+
+---
+
+
+
+
+
+
+
+# Forecasting
+
+.pull-left[
+&lt;h2 style="margin-top:15%;"&gt;Predicting the outcome of events is the obsession of most sports statisticians.&lt;/h2&gt;
+]
+
+.pull-right[
+![](fortune_teller.gif)
+]
+
+
+---
+
+# Tennis Serve
+
+The tennis serve is one of the most important skills in tennis. Why?
+
+![](tennis_serve.gif)
+
+
+---
+
+![](service-winner_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+---
+
+# What Makes a Great Server?
+
+
+&lt;h3&gt;&lt;i&gt;I think it was all about him being able to get free points on his serve. He’s a top 10 player and in these decisive moments he could get some free points toward the end of the match.&lt;/i&gt;&lt;/h3&gt;
+
+&lt;h3&gt;&amp;mdash;Alex De Minaur on playing Alexander Zverev at Davis Cup 2018&lt;/h3&gt;
+
+---
+
+# Free Points on Serve
+
+
+.pull-left[
+&lt;img src="serena_serve.jpg" style='margin-top:2%;' /&gt;
+Aces
+]
+
+.pull-right[
+&lt;img src="service_winner.png" /&gt;
+Service Winners 
+]
+
+---
+
+# Point Level Tennis Data
+
+The `deuce` package is a helpful resource for match, point, and shot-level data about tennis.
+
+It is available for download on github.
+
+
+```r
+library(devtools)
+
+install_github('skoval/deuce')
+```
+
+---
+
+# Free Point Data
+
+The data set `gs_point_by_point` has point level data for men's and women's Grand Slams from 2011-2017. 
+
+- Every row corresponds to one point in a Grand Slam match
+
+- For 2017, all matches include a `RallyCount`, which we can use to derive an indicator for a free point on serve
+
+---
+
+# Problem: Preparing Data
+
+Using the `gs_point_by_point` data...
+
+1. Limit the dataset to 2017 men's matches
+
+2. Derive free point, server, and receiver variables
+
+3. Select the matchid, server, receiver, free point, and serve number variables
+
+&lt;br&gt;
+&lt;br&gt;
+
+Hint: A free point is a point won by the server with an ace or service winner
+
+---
+
+# Solution
+
+
+```r
+library(deuce)
+
+data(gs_point_by_point)
+
+men2017 &lt;- gs_point_by_point %&gt;%
+  filter(Tour == "atp", year == 2017) %&gt;%
+  dplyr::mutate(
+    server = ifelse(PointServer == 1, player1, player2),
+    receiver = ifelse(PointServer == 1, player2, player1),
+    server_won = PointServer == PointWinner,
+		free_point = RallyCount &lt;= 1 &amp; server_won &amp; 
+		    P1UnfErr == 0 &amp; P2UnfErr == 0
+  ) %&gt;%
+select(match_id, server, receiver, free_point, number = ServeNumber)
+```
+
+---
+
+# Problem
+
+1. Summarize the number and percentage of free points won for each server and match
+
+2. Where serve number is 0, assign this to a first serve
+
+3. Summarize separately for first and second serve
+
+4. Retain the name of the receiver in your dataset
+
+5. Plot the distribution of free point percentage by serve number
+
+---
+
+# Solution
+
+
+```r
+free_point &lt;- men2017 %&gt;%
+  dplyr::mutate(
+    number = ifelse(number == 0, 1, number)
+  ) %&gt;%
+  group_by(match_id, server, number) %&gt;%
+  dplyr::summarise(
+    opponent = receiver[1],
+    n = n(),
+    total = sum(free_point),
+    p = mean(free_point)
+  )
+```
+
+---
+
+![](service-winner_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+
+# Player Differences
+
+Look at the density plots for the following players. What do they suggest?
+
+![](service-winner_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+
+# Modelling Free Points
+
+A reasonable model for the free point outcomes treat free points as draws from a Binomial distribution with `\(n\)` trials and success probability `\(p\)`.
+
+&lt;br&gt;
+
+$$
+Free Points \sim Binomial(p, n)
+$$
+
+&lt;br&gt;
+
+--
+
+But what determines `\(p\)`?
+
+---
+
+# Modelling Free Points
+
+From our exploratory graphs, the minimum variables that could influence the proportion of free points are:
+
+&lt;br&gt;
+&lt;br&gt;
+
+- The server's serve ability
+
+- The opponent's return ability
+
+- The serve number
+
+---
+
+# Regression Model 
+
+We will consider the following logistic regression model for the free point success proportion on first serve:
+
+&lt;br&gt;
+
+$$
+logit(p_{ij}) | First Serve = \mu + \alpha_i - \beta_j 
+$$
+
+&lt;br&gt;
+&lt;br&gt;
+
+- `\(\mu\)` Average free point percentage
+
+- `\(\alpha_i\)` Ability of the server
+
+- `\(\beta_j\)` Ability of the receiver
+
+
+---
+
+# Problem: Prepare Data
+
+- Limit the dataset to first serves
+
+- Include serves with more than 1 match
+
+- Reserve some data for testing the model forecasts
+
+---
+
+# Solution: Prepare Data
+
+
+
+```r
+# Limit to first serve
+free_point &lt;- free_point %&gt;% filter(number == 1)
+
+# Limit to servers with multiple matches
+free_point &lt;- free_point %&gt;%
+    group_by(server) %&gt;%
+    dplyr::mutate(
+      matches = n_distinct(match_id)
+    ) %&gt;%
+    filter(matches &gt; 1)
+
+# Assign test cases
+free_point &lt;- free_point[sample(1:nrow(free_point)),]
+
+free_point &lt;- free_point %&gt;%
+    group_by(server) %&gt;%
+    dplyr::mutate(
+      test = c(1, rep(0, n() - 1))      
+    )
+```
+
+
+---
+
+# Solution: Continued...
+
+
+```r
+free_point$j &lt;- (1:n_distinct(free_point$server))
+  [factor(free_point$server)]
+
+free_point$k &lt;- (1:n_distinct(free_point$opponent))
+  [factor(free_point$opponent)]
+
+# Train data
+trainData &lt;- free_point %&gt;% filter(test == 0)
+```
+
+---
+
+# Bayesian Model
+
+We have proposed a hierarchical model with server and receiver effects. This can be most readily implemented using a Bayesian multi-level model. Here are the distributional assumptions for our model:
+
+`$$\mu \sim N(\mu_0, \sigma_0^2)$$`
+
+`$$\alpha_i \sim N(0, \sigma_\alpha^2)$$`
+`$$\theta_i \sim N(0, \sigma_\theta^2)$$`
+All hyper-parameters will be given flat priors.
+
+---
+
+# Implementing in `rjags`
+
+
+
+```r
+library(rjags)
+
+modelString = "
+  model{
+
+    for(i in 1:N) {   
+      total[i] ~ dbinom(p[i], n[i])
+      
+      logit(p[i]) &lt;- mu + alpha[j[i]] - theta[k[i]]
+      }
+      
+     for(l in 1:J){
+      alpha[l] ~ dnorm(0, tau.sigma.alpha)
+     }
+	
+     for(l in 1:K){
+      theta[l] ~ dnorm(0, tau.sigma.theta)
+     }
+
+    mu ~ dnorm(mu0, tau.sigma.mu)
+    mu0 ~ dnorm(0, .001)
+
+ 	  tau.sigma.alpha &lt;- pow(sigma.alpha, -2)
+ 	  sigma.alpha ~ dunif(0, 100)
+
+ 	  tau.sigma.theta &lt;- pow(sigma.theta, -2)
+ 	  sigma.theta ~ dunif(0, 100)
+
+  	tau.sigma.mu &lt;- pow(sigma.mu, -2)
+ 	  sigma.mu ~ dunif(0, 100)
+}
+"
+```
+
+---
+
+# Running Model on Training Data
+
+
+```r
+jags &lt;- rjags::jags.model(textConnection(modelString),
+                   data = list('J' =  max(trainData$j),
+                   			   'K' =  max(trainData$k),
+                   			   'j' = trainData$j,
+                   			   'k' = trainData$k,
+                   			   'total' = trainData$total,
+                   			   'n' = trainData$n,
+                   			   'N' = nrow(trainData)
+                               ),
+                   n.chains = 3,
+                   n.adapt = 1000)
+```
+
+```
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 713
+##    Unobserved stochastic nodes: 328
+##    Total graph size: 5045
+## 
+## Initializing model
+```
+
+```r
+update(jags, 1000)
+```
+
+---
+
+# Hyper-Parameter Convergence
+
+
+```r
+hyper.posterior &lt;- coda.samples(jags, 
+                                c("mu"), 
+                                n.iter = 1000)
+
+traceplot(hyper.posterior)
+```
+
+![](service-winner_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+---
+
+# Summarize Hyper-Parameters
+
+
+```r
+expit &lt;- function(x) exp(x) / (1 + exp(x))
+
+summary(expit(hyper.posterior[[1]][,1]))
+```
+
+```
+## 
+## Iterations = 2001:3000
+## Thinning interval = 1 
+## Number of chains = 1 
+## Sample size per chain = 1000 
+## 
+## 1. Empirical mean and standard deviation for each variable,
+##    plus standard error of the mean:
+## 
+##           Mean             SD       Naive SE Time-series SE 
+##      0.3800257      0.0121979      0.0003857      0.0034197 
+## 
+## 2. Quantiles for each variable:
+## 
+##   2.5%    25%    50%    75%  97.5% 
+## 0.3546 0.3723 0.3800 0.3870 0.4112
+```
+
+
+---
+
+# Problem: Player Parameters
+
+1. Obtain the serve and return parameters using `coda.samples`
+
+2. Calculate the posterior median for each player
+
+3. Plot the serve parameter against return
+
+4. Who are the strongest servers? Who are the strongest all-around?
+
+---
+
+# Solution: Player Posterior Parameters
+
+
+```r
+alpha.posterior &lt;- coda.samples(jags, 
+                                "alpha",
+                                n.iter = 1000)
+
+
+alpha.posterior &lt;- do.call("rbind", alpha.posterior)
+
+alpha.posterior &lt;- as.data.frame(alpha.posterior) %&gt;%
+  gather("player", "alpha", contains("alpha"))
+
+alpha.posterior$player  &lt;- 
+  as.numeric(str_extract(alpha.posterior$player, "[0-9]+"))
+```
+
+---
+
+# Solution: Player Posterior Parameters
+
+
+```r
+theta.posterior &lt;- coda.samples(jags, 
+                                "theta",
+                                n.iter = 1000)
+
+
+theta.posterior &lt;- do.call("rbind", theta.posterior)
+
+theta.posterior &lt;- as.data.frame(theta.posterior) %&gt;%
+  gather("player", "theta", contains("theta"))
+
+theta.posterior$player &lt;- 
+  as.numeric(str_extract(theta.posterior$player, "[0-9]+"))
+```
+
+
+---
+
+# Solution: Player Posterior
+
+
+```r
+alpha.median &lt;- alpha.posterior %&gt;%
+  group_by(player) %&gt;%
+  dplyr::summarise(
+    alpha = median(alpha)
+  )
+
+theta.median &lt;- theta.posterior %&gt;%
+  group_by(player) %&gt;%
+  dplyr::summarise(
+    theta = median(theta)
+  )
+
+combine &lt;- merge(alpha.median, theta.median, by = "player")
+
+combine &lt;- merge(combine, unique(ungroup(free_point) %&gt;% 
+            select(name = server, player = j)), by = "player")
+```
+
+---
+
+# Solution: Player Posterior
+
+
+![](service-winner_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
+---
+
+# What About Testing?
+
+- We can look at the validity of a method by collecting posterior predictions
+
+- The predictions can be collected at the time we run our model
+
+---
+
+# Model with Testing
+
+
+```r
+testData &lt;- free_point %&gt;% filter(test == 1)
+
+modelString = "
+  model{
+
+    for(i in 1:N) {   
+      total[i] ~ dbinom(p[i], n[i])
+
+      logit(p[i]) &lt;- mu + alpha[j[i]] - theta[k[i]]
+    }
+
+  for(i in 1:M){
+      new.total[i] ~ dbinom(test.p[i], test.n[i])
+
+      logit(test.p[i]) &lt;- mu + alpha[test.j[i]] - theta[test.k[i]]
+  }
+      
+  for(l in 1:J){
+      alpha[l] ~ dnorm(0, tau.sigma.alpha)
+    }
+	
+     for(l in 1:K){
+      theta[l] ~ dnorm(0, tau.sigma.theta)
+     }
+
+    mu ~ dnorm(mu0, tau.sigma.mu)
+    mu0 ~ dnorm(0, .001)
+
+ 	  tau.sigma.alpha &lt;- pow(sigma.alpha, -2)
+ 	  sigma.alpha ~ dunif(0, 100)
+
+ 	  tau.sigma.theta &lt;- pow(sigma.theta, -2)
+ 	  sigma.theta ~ dunif(0, 100)
+
+  	tau.sigma.mu &lt;- pow(sigma.mu, -2)
+ 	  sigma.mu ~ dunif(0, 100)
+}
+"
+```
+
+---
+
+
+```r
+jags &lt;- rjags::jags.model(textConnection(modelString),
+                   data = list('J' =  max(trainData$j),
+                   			   'K' =  max(trainData$k),
+                   			   'j' = trainData$j,
+                   			   'k' = trainData$k,
+                   			   'total' = trainData$total,
+                   			   'n' = trainData$n,
+                   			   'N' = nrow(trainData),
+                   			   'test.j' = testData$j,
+                   			   'test.k' = testData$k,
+                   			   'test.n' = testData$n,
+                   			   'M' = nrow(testData)
+                               ),
+                   n.chains = 3,
+                   n.adapt = 1000)
+```
+
+```
+## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 713
+##    Unobserved stochastic nodes: 470
+##    Total graph size: 5898
+## 
+## Initializing model
+```
+
+```r
+update(jags, 1000)
+```
+
+---
+
+# Problem: Examine Accuracy
+
+- Use the posterior predictions to calculate the residuals of the predictions against their actual values
+
+- Plot a histogram of the results across all servers
+
+- What do these suggest about the model performance?
+
+---
+
+# Solution: Examine Accuracy
+
+
+
+```r
+accuracy &lt;- coda.samples(jags, 
+                         "new.total",
+                          n.iter = 1000)
+
+accuracy &lt;- do.call("rbind", accuracy)
+
+actual &lt;- matrix(testData$total[order(testData$j)], 
+                 byrow = T, 
+                 nrow = nrow(accuracy),
+                 ncol = ncol(accuracy))
+
+accuracy &lt;- accuracy - actual
+```
+
+---
+
+![](service-winner_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
+
+---
+
+# Resources
+
+- https://martynplummer.wordpress.com/category/jags/
+
+- The BUGS Book: A Practical Introduction to Bayesian Analysis
+
+- http://www-math.bgsu.edu/~albert/bcwr/
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Part 4. Modelling Sports Data - Paired Comparisons</title>
+    <meta charset="utf-8">
+    <meta name="author" content="satRday 2018, Cape Town" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="duke_color_pallettes_slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Part 4. Modelling Sports Data - Paired Comparisons
+## The Sport Statistician’s Toolbox in R
+### satRday 2018, Cape Town
+
+---
+
+
+
+
+
+
+
+# Sport Competition
+
+Whether it's two individuals or two teams, most sport competition comes down to a paired comparison. 
+
+![](dog_surf.gif)
+
+---
+
+# Win Ability
+
+- The 'comparison' of main interest in sport is a competitors ability to win
+
+- How competitors have fared against each other gives us the most direct information about their respective win abilities
+
+- The family of `paired comparison models` are useful tools for estimating that ability 
+
+
+![](lebron.gif)
+
+---
+
+# Question: Abilities
+
+- Suppose we have two competitors who are going to face each other
+
+- Further suppose we know that Competitor A has ability `\(\delta_A\)` and Competitor B has ability `\(\delta_B\)` 
+
+- What properties of `\(\delta_A\)` and `\(\delta_B\)` would make us favor one competitor over another?
+
+--
+
+Answer: We should favor the competitor with greater ability.
+
+
+---
+
+# Bradely-Terry-Luce
+
+.cbox[
+### One of the most popular paired comparison models is the Bradley-Terry-Luce model.
+]
+
+- Bradley-Terry-Luce encapsulates the idea that competition results tell us about the underlying abilities of the competitors.
+
+- Relative ability is modeled as a logistic function of wins:
+
+&lt;br&gt;
+
+$$
+P(Win_A = 1) = \frac{\exp{(\delta_A - \delta_B)}}{1 + \exp{(\delta_A - \delta_B)}}
+$$
+
+---
+
+# BTL Properties
+
+- Win expectations all come down to the difference in abilities
+
+- An equal difference, `\(\delta_A - \delta_B\)`, implies the same win expectation no matter the individual abilities of `\(A\)` and `\(B\)`
+
+- Expectations are even when `\(\delta_A -\delta_B = 0\)`
+
+- Roughly +10% for every added difference in ability of 0.4
+
+---
+
+![](paired-comparison_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+---
+
+# BTL in R
+
+- `BradleyTerry2` (authors Turner and Firth) is an R package for fitting BTL models
+
+- It uses maximum-likelihood to estimate competitor abilities
+
+- It can incorporate covariates
+
+- Other binary families can also be fit
+
+
+```r
+install.packages("BradleyTerry2")
+```
+
+---
+
+# Function BTm
+
+The main workhorse function for the BTL model is `BTm`. Here is the general syntax:
+
+
+```r
+BTM(outcome, player1, player2, ...)
+```
+
+- `outcome` is with respect to `player1`
+
+- `player1` must be a factor with same levels as `player2`
+
+- `player2` must be a factor with same levels as `player1`
+
+Note: The `outcome` is with respect to `player1`.
+
+---
+
+
+# English Premier League
+
+We can download the current standings for the EPL from the [www.football-data.co.uk](www.football-data.co.uk)
+
+
+```r
+football &lt;- "http://www.football-data.co.uk/mmz4281/1718/E0.csv"
+
+data &lt;- read.csv(football, stringsAsFactors = FALSE)
+```
+
+---
+
+# EPL Data
+
+Each row is a summary of a particular EPL game. The variables of interest are:
+
+- HomeTeam: The name of the home team
+
+- AwayTeam: The name of the away team
+
+- FTHG: Goals scored by home team
+
+- FTAG: Goals scored by away team
+
+---
+
+# Example: Basic BTL
+
+Below we derive an indicator for wins and losses and then fit a BTL using the `BTm` function.
+
+
+```r
+library(BradleyTerry2)
+
+data &lt;- data %&gt;%
+  dplyr::mutate(
+    outcome = as.numeric(FTHG &gt; FTAG),
+    HomeTeam = factor(HomeTeam, levels = unique(c(HomeTeam, AwayTeam))),
+    AwayTeam = factor(AwayTeam, levels = levels(HomeTeam))
+  )
+
+
+
+fit &lt;- BTm(outcome, HomeTeam, AwayTeam, 
+           data = data)
+```
+
+---
+
+# BTm Methods
+
+The result of `BTm` has all of the standard methods of `glm` models.
+
+- `print` : Model summary and point estimates of coefficients
+
+
+- `summary`: More detailed summary of estimates (including standard errors)
+
+- `plots`: Residual diagnostic plots
+
+---
+
+
+# Abilities
+
+A useful function for extracting the abilities on the log scale is with the function `BTabilities`.
+
+
+```r
+abilities &lt;- BTabilities(fit) # Matrix of ability and StdErr
+
+abilities &lt;- data.frame(
+  Team = rownames(abilities),
+  Ability = abilities[,1],
+  SE = abilities[,2]
+)
+
+abilities$Team &lt;- factor(abilities$Team, 
+                        levels = abilities$Team[order(abilities$Ability)],
+                        order = T)
+```
+
+---
+
+![](paired-comparison_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+
+# Question
+
+What are some of the shortcomings of our current model?
+
+--
+
+Some possibilities:
+
+- No home/away advantage
+
+- We treat ties as losses for Home team
+
+---
+
+# Home Advantage
+
+It is generally thought that a team gets a boost in their win expectations when playing at home. 
+
+To introduce a home advantage covariate, we need to restructure out dataset and add a covariate for each team factor. 
+
+
+```r
+data$Home &lt;- data.frame(
+  Team = data$HomeTeam, 
+  at.home = 1
+)
+
+data$Away &lt;- data.frame(
+  Team = data$AwayTeam, 
+  at.home = 0
+)
+```
+
+---
+
+# Home Advantage BTL
+
+Now we add the home advantage covariate (`at.home`) to the model, using the `formula` statement.
+
+
+
+```r
+fit &lt;- BTm(outcome, Home, Away, 
+           data = data,
+           id = "Team", 
+           formula = ~ Team + at.home
+           )
+```
+
+---
+
+# Problem
+
+1. What does the `at.home` effect suggest about the home advantage in the 2017-2018 EPL?
+
+2. How do the abilities change compared to our previous fit without this advantage?
+
+---
+
+# Solution: Home Advantage Estimate
+
+
+```r
+summary(fit)$coef["at.home",]
+```
+
+```
+##   Estimate Std. Error    z value   Pr(&gt;|z|) 
+## -0.2042568  0.1341758 -1.5223078  0.1279320
+```
+
+---
+
+# Solution: Change In Abilities
+
+![](paired-comparison_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
+
+---
+
+# Reverse Home Advantage?
+
+- Our results suggest that playing at home is actually a _disadvantage_.
+
+- This goes against all conventional thinking!
+
+- Could we have made a mistake somewhere?
+
+---
+
+# Problem: Ties
+
+We have treated ties (or draws) as losses for the home team. Have a look at the frequency of ties in the EPL data. Could our assumption be a problem?
+
+
+---
+
+# Solution: Frequency of Ties
+
+
+
+```r
+data$ties &lt;- data$FTHG == data$FTAG
+
+data %&gt;%
+  ggplot(aes(x = ties)) +
+  geom_bar(fill = "#e5952c") +
+  theme_hc()
+```
+
+---
+
+![](paired-comparison_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+---
+
+# Problem: Effect of Ties
+
+- Fit a BTM + Home advantage excluding matches with ties
+
+- Determine the estimate of the home advantage
+
+- What do you conclude about the importance of handling ties for our model?
+
+---
+
+# Solution: Effect of Ties
+
+
+```r
+data$Home &lt;- data$Away &lt;- NULL
+
+data &lt;- data %&gt;% filter(!ties)
+
+data$Home &lt;- data.frame(
+  Team = data$HomeTeam, 
+  at.home = 1
+)
+
+data$Away &lt;- data.frame(
+  Team = data$AwayTeam, 
+  at.home = 0
+)
+
+fit &lt;- BTm(outcome, Home, Away, 
+           data = data,
+           id = "Team", 
+           formula = ~ Team + at.home
+           )
+
+summary(fit)$coef["at.home",]
+```
+
+```
+##     Estimate   Std. Error      z value     Pr(&gt;|z|) 
+## 8.857312e-01 2.000353e-01 4.427876e+00 9.516578e-06
+```
+
+---
+
+# Resources
+
+- Cattelan, M, Varin, C and Firth, D (2013). Dynamic Bradley-Terry modelling of sports tournaments. Journal of the Royal Statistical Society C 62, 135–150.
+
+- Turner, H and Firth, D (2012). Bradley-Terry Models in R: The `BradleyTerry2` Package. Journal of Statistical Software 48(9), 1–21.
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

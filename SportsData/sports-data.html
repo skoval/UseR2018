@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Sport Statistician’s Toolbox in R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="satRday 2018, Cape Town" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="duke_color_pallettes_slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# The Sport Statistician’s Toolbox in R
+### satRday 2018, Cape Town
+
+---
+
+
+
+
+
+# About Me
+
+- Senior Data Scientist for Tennis Australia's Game Insight Group
+
+- Research Fellow at Victoria University
+
+- Tennis Blogger at [on-the-t.com](on-the-t.com)
+
+- @StatsOnTheT
+
+
+---
+
+# Tutorial Resources
+
+- Github: [github.com/skoval/satRday](github.com/skoval/satRday)
+
+- Contact: [s.a.kovalchik@gmail.com](s.a.kovalchik@gmail.com)
+
+---
+
+# Tutorial Outline
+
+Part 1. Sports data and packages
+
+Part 2. Web scraping
+
+Part 3. Data wrangling
+
+Part 4. Modelling sports data
+
+Part 5. Blogging
+
+---
+
+
+class: slide-img
+
+&lt;br&gt;
+&lt;br&gt;
+
+.cbox[
+### Part 1. Sports Data and Packages
+]
+
+---
+
+# Common Types of Sports Data
+
+- Box Scores
+
+- Metrics
+
+- Tracking data
+
+---
+
+
+&lt;div align="center" style="margin-top: 10%;"&gt;
+&lt;img src="1876boxscore.jpg" width=90%&gt;
+&lt;/div&gt;
+
+
+---
+
+
+# Box Scores
+
+A 'box score' is a generic term for the summary statistics reported about a single sporting event.
+
+.hbox[
+This is the most abundant type of sports data and the easiest to get your hands on.
+]
+
+---
+
+
+
+&lt;div align="center" style="margin-top: 10%;"&gt;
+&lt;img src="fivethirtyeight_nba_ratings.png" width=90%&gt;
+&lt;/div&gt;
+
+
+---
+
+# Metrics
+
+A lot of sports data is pre-summarized or the output of a statistical model that is used for further analysis. There are &lt;i&gt;derived&lt;/i&gt; sports data.
+
+- Game predictions
+
+- Player ratings
+
+- Betting odds
+
+.hbox[
+Metrics are most available for sports where the most statistical work is going on.
+]
+
+---
+
+&lt;div align="center" style="margin-top: 10%;"&gt;
+&lt;img src="lebron.jpg" width=90%&gt;
+&lt;/div&gt;
+
+---
+
+class: slide-img
+
+# Tracking Data
+
+'Tracking data' describes spatial temporal data of objects in a sporting event.
+
+.hbox[
+This is most difficult data to get access to.
+]
+
+---
+
+class: slide-img
+
+# Getting Data
+
+Here are some resources to directly download large amounts of sports data for free:
+
+&lt;br&gt;
+
+<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em;' >
+<thead>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Resource</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Site</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Types.of.Data</th>
+</tr>
+</thead>
+<tbody>
+<tr style='background-color: #ffffff;'>
+<td style='text-align: center; background-color: #ffffff;'>Open Source Sports</td>
+<td style='text-align: center; background-color: #ffffff;'>www.opensourcesports.com</td>
+<td style='text-align: center; background-color: #ffffff;'>American team sports</td>
+</tr>
+<tr style='background-color: #eeeeee;'>
+<td style='text-align: center; background-color: #eeeeee;'>Massey Ratings</td>
+<td style='text-align: center; background-color: #eeeeee;'>www.masseyratings.com/data.php</td>
+<td style='text-align: center; background-color: #eeeeee;'>American Pro and collegiate sports</td>
+</tr>
+<tr style='background-color: #ffffff;'>
+<td style='text-align: center; background-color: #ffffff;'>Washington Post</td>
+<td style='text-align: center; background-color: #ffffff;'>stats.washingtonpost.com/cbk/teams.asp</td>
+<td style='text-align: center; background-color: #ffffff;'>Collegiate basketball</td>
+</tr>
+<tr style='background-color: #eeeeee;'>
+<td style='text-align: center; background-color: #eeeeee;'>Retrosheet</td>
+<td style='text-align: center; background-color: #eeeeee;'>www.retrosheet.org/</td>
+<td style='text-align: center; background-color: #eeeeee;'>Major league baseball</td>
+</tr>
+<tr style='background-color: #ffffff;'>
+<td style='text-align: center; background-color: #ffffff; border-bottom: 2px solid grey;'>Sean Lahman's Database</td>
+<td style='text-align: center; background-color: #ffffff; border-bottom: 2px solid grey;'>www.seanlahman.com/baseball-archive/statistics</td>
+<td style='text-align: center; background-color: #ffffff; border-bottom: 2px solid grey;'>Major league baseball</td>
+</tr>
+</tbody>
+</table>
+          
+---
+
+class: slide-img
+
+# Packages
+
+<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em;' >
+<thead>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Sport</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Package</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>What.They.Do</th>
+</tr>
+</thead>
+<tbody>
+<tr style='background-color: #ffffff;'>
+<td style='text-align: center; background-color: #ffffff;'>General</td>
+<td style='text-align: center; background-color: #ffffff;'>stattleshipR</td>
+<td style='text-align: center; background-color: #ffffff;'>Extract data for major American sports</td>
+</tr>
+<tr style='background-color: #ffffff;'>
+<td style='text-align: center; background-color: #ffffff;'></td>
+<td style='text-align: center; background-color: #ffffff;'>SportsAnalytics</td>
+<td style='text-align: center; background-color: #ffffff;'>Historical soccer data</td>
+</tr>
+<tr style='background-color: #ffffff;'>
+<td style='text-align: center; background-color: #ffffff;'></td>
+<td style='text-align: center; background-color: #ffffff;'>odds.converter</td>
+<td style='text-align: center; background-color: #ffffff;'>Conversion functions for many types of odds</td>
+</tr>
+<tr style='background-color: #eeeeee;'>
+<td style='text-align: center; background-color: #eeeeee;'>Soccer</td>
+<td style='text-align: center; background-color: #eeeeee;'>engsoccerdata</td>
+<td style='text-align: center; background-color: #eeeeee;'>Historical soccer data</td>
+</tr>
+<tr style='background-color: #ffffff;'>
+<td style='text-align: center; background-color: #ffffff;'>Baseball</td>
+<td style='text-align: center; background-color: #ffffff;'>pitchRx</td>
+<td style='text-align: center; background-color: #ffffff;'>Scrape and visualize MLB gameday and pitch tracking data</td>
+</tr>
+<tr style='background-color: #ffffff;'>
+<td style='text-align: center; background-color: #ffffff;'></td>
+<td style='text-align: center; background-color: #ffffff;'>Lahman</td>
+<td style='text-align: center; background-color: #ffffff;'>Historical baseball data</td>
+</tr>
+<tr style='background-color: #eeeeee;'>
+<td style='text-align: center; background-color: #eeeeee;'>Tennis</td>
+<td style='text-align: center; background-color: #eeeeee;'>deuce</td>
+<td style='text-align: center; background-color: #eeeeee;'>Historical tennis data</td>
+</tr>
+<tr style='background-color: #ffffff;'>
+<td style='text-align: center; background-color: #ffffff; border-bottom: 2px solid grey;'>Cricket</td>
+<td style='text-align: center; background-color: #ffffff; border-bottom: 2px solid grey;'>cricketr!</td>
+<td style='text-align: center; background-color: #ffffff; border-bottom: 2px solid grey;'>Historical data and analytic tools for cricket</td>
+</tr>
+</tbody>
+</table>
+
+---
+
+# Reality Check
+
+For answering topical questions for our sport of interest, we will usually need to scrape data from the Web. 
+
+
+That is the focus of the next part of the workshop...
+
+&lt;div style="padding:2%;" align="center" &gt;
+&lt;img src="homer.gif" width=40%&gt;
+&lt;/div&gt;
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

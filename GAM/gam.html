@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Part 4. Modelling Sports Data - Generalized Additive Models</title>
+    <meta charset="utf-8">
+    <meta name="author" content="satRday 2018, Cape Town" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="duke_color_pallettes_slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Part 4. Modelling Sports Data - Generalized Additive Models
+## The Sport Statistician’s Toolbox in R
+### satRday 2018, Cape Town
+
+---
+
+
+
+
+
+
+
+# Tracking Data
+
+
+<img src="sportvu.jpg" width=80% />
+
+
+---
+
+# Availability
+
+- Sadly, most tracking data in sport is proprietary
+
+- Luckily, there are some exceptions
+
+- MLB, for instance, made pitch tracking data available from the pitchf/x system for multiple seasons since 2008 
+
+---
+
+# pitchRx
+
+The `pitchRx` package by Carson Sievert provides a way to download and visualize pitchFX data in R.
+
+
+```r
+install.packages("pitchRx")
+```
+
+
+---
+
+# Pitcher Tracking Data
+
+
+The `scrape` function is the main resource for importing pitcher tracking data from the pitchFx/Gameday data. The main way to pull data is by indicating the start and end days of interest. Below is an example for extracting pitch information for August 1, 2015. 
+
+
+```r
+pitches &lt;- scrape(start = "2015-08-01", end = "2015-08-01")
+```
+
+The `start` and `end` must both be in the `yyyy-mm-dd` format.
+
+---
+
+# Results
+
+- The `scrape` function returns an array of 5 data frames
+
+- The data frame of main interest is named `pitch`
+
+- A full glossary of the variables can be found at: https://fastballs.wordpress.com/2007/08/02/glossary-of-the-gameday-pitch-fields/
+
+---
+
+# Visualization
+
+There are three functions for visualizing pitch data from the `pitchRx` package:
+
+- animateFX: 2D pitch trajectory animation
+
+- interactiveFX: 3D pitch trajectory interactive chart
+
+- strikeFX: 2D strike zone chart
+
+---
+
+# Preparing Data
+
+To use any of these visualization functions, we have to combine the `atbat` and `pitch` datasets. Here is an example for inspecting the strike zone in our sample of pitches. 
+
+
+```r
+pitch &lt;- pitches$pitch %&gt;%
+  select(px, pz, des, gameday_link, num) # Left distance, height, description of pitch
+
+atbat &lt;- pitches$atbat %&gt;%
+  select(b_height, p_throws, stand, inning_side, gameday_link, num)
+
+decisions &lt;- inner_join(pitch, atbat, by = c("gameday_link", "num"))
+```
+
+---
+
+# Problem: Inspecting Descriptions
+
+- Tabulate the `des` variable
+
+- What codes do we want if we are interested in strikes without a swing?
+
+
+---
+
+# Solution: Inspecting Descriptions
+
+
+```r
+cbind(table(decisions$des))
+```
+
+```
+##                           [,1]
+## Ball                      1352
+## Ball In Dirt                86
+## Called Strike              710
+## Foul                       768
+## Foul (Runner Going)         13
+## Foul Bunt                   15
+## Foul Tip                    23
+## Hit By Pitch                11
+## In play, no out            168
+## In play, out(s)            537
+## In play, run(s)            107
+## Intent Ball                 20
+## Missed Bunt                  3
+## Pitchout                     2
+## Swinging Strike            384
+## Swinging Strike (Blocked)   31
+```
+
+
+---
+
+# Called Strikes
+
+The `strikeFX` takes `geom` and `density` arguments. We can also add layers as with `ggplot` objects.
+
+
+```r
+strikeFX(decisions, geom = "tile", 
+         density1 = list(des = "Called Strike"),
+         density2 = list(des = "Called Strike")) + 
+  theme_hc()
+```
+
+---
+
+![](gam_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+
+---
+
+# Problem: Strikes vs Balls
+
+- Modify `strikeFX` to compare balls and strikes
+
+- What is illustrated in the density estimates in this case?
+
+---
+
+
+# Strikes vs Balls
+
+
+
+```r
+strikeFX(decisions, geom = "tile", 
+         density1 = list(des = "Called Strike"),
+         density2 = list(des = "Ball")) + 
+  theme_hc()
+```
+
+---
+
+
+
+![](gam_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+
+---
+
+# Called Strike vs Other Strikes?
+
+Reading a pitch is an essential skill of batters. A `called strike` is a pitch the umpire determines to be in the strike zone but a pitched did not take a swing. Why?
+
+- It could be the pitch count
+
+- It could be they had a bad read on the ball
+
+---
+
+# Modelling Called Strikes
+
+Suppose we want to model what makes a pitch difficult to read? What should such a model consider?
+
+- The trajectory of the ball
+
+- It's speed
+
+- The pitch count
+
+- The handedness of the pitcher
+
+- The handedness of the batter
+
+---
+
+# More Trajectory Data
+
+In addition to the height and horizontal distances of the pitch, let's grab more information about the distances traveled, speed, and accelerations.
+
+
+```r
+pitch &lt;- pitches$pitch %&gt;%
+  select(px, pz, des, x0:az, gameday_link, num) # Left distance, height, description of pitch
+
+atbat &lt;- pitches$atbat %&gt;%
+  select(b_height, p_throws, stand, inning_side, gameday_link, num)
+
+decisions &lt;- inner_join(pitch, atbat, by = c("gameday_link", "num"))
+```
+
+---
+
+# Filtering Strikes
+
+Next, we limit the data to strikes and create out outcome variable `called` to denote `Called Strikes`.
+
+
+```r
+strikes &lt;- decisions[grep("strike", ignore = T, decisions$des),]
+
+strikes$called &lt;- as.numeric(str_detect(strikes$des, "Called"))
+
+table(strikes$called)
+```
+
+```
+## 
+##   0   1 
+## 415 710
+```
+
+---
+
+# Animate Pitches
+
+Let's use the `animateFX` to see how the trajectories of called and swung-at strikes might differ.
+
+
+
+```r
+strikes$called &lt;- factor(strikes$called)
+
+animateFX(strikes,
+          color = "called") 
+```
+
+
+---
+
+# Pattern Interpretation
+
+The animation suggests that the height of the pitch might be especially important. What about speed? Let's focus just on the height and velocity in the vertical direction. 
+
+Run this plot and interpret the pattern you see.
+
+
+
+
+```r
+strikes %&gt;% 
+  ggplot(aes(y = vz0, x = pz, col = called)) + 
+  scale_y_continuous("Vertical Velocity") + 
+  scale_x_continuous("Height Over Plate") + 
+  geom_point() +
+  theme_hc() + 
+  scale_colour_tableau(name = "")
+```
+
+---
+
+
+![](gam_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
+
+---
+
+# GLM 
+
+When looking at the relationship between covariates and an outcome, most of us are used to GLMs. Recall that for any `\(Y\)` that can be described by a member of the exponential family, the GLM model is:
+
+`$$g(E(Y | X = x)) = \beta_0 + \sum_{i=1}^p \beta_i x_i$$`
+
+where `\(X\)` are our covariates and `\(g()\)` is a link function.
+
+---
+
+
+# GLM vs GAM
+
+The GLM will not be adequate when modelling trajectories, as we have already seen that the relationship between the physical variables an our outcome is usually complex and non-linear.
+
+A common alternative is the Generalized Additive Model (GAM) which has a similar form as the GLM but with an important difference:
+
+`$$g(E(Y | X = x)) = \beta_0 + \sum_{i=1}^p f_i(x_i)$$`
+
+where each `\(f_i(.)\)` is a smooth function.
+
+---
+
+# Smooths
+
+- Common types
+  - Polynomials
+  - Splines
+
+- Tuning parameters
+  - Degree, knots
+  
+- Can be with one variable, interactions, conditional on another variable, etc. (lots of flexibility)
+
+Note: `\(f_i(.) = \beta_i x_i\)` and default back to the parametric form of the GLM
+
+---
+
+# Implementation
+
+- The package `mgcv` provides a comprehensive set of modelling functions for GAMs
+
+- Main functions
+  - gam: general-purpose GAM
+  - bam: optimized for larger datasets
+  - jagam: Bayesian implementation of GAMs
+
+&lt;br&gt;
+
+
+```r
+install.packages('mgcv')
+```
+
+---
+
+# Illustration
+
+In this example, we fit a GAM using `bam` for the log odds of `called` strikes as a smooth function of the height of the landing location with 100 knots.
+
+
+```r
+fit &lt;- bam(called ~ s(pz, k = 100),
+           family = "binomial",
+           data = strikes)
+```
+
+---
+
+# Diagnostics
+
+The `gam.check` function provides some residual diagnostics to check the appropriateness of the model fit. 
+
+
+```r
+gam.check(fit)
+```
+
+
+---
+
+![](gam_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+```
+## 
+## Method: fREML   Optimizer: perf newton
+## full convergence after 4 iterations.
+## Gradient range [3.60381e-09,3.60381e-09]
+## (score 1561.205 &amp; scale 1).
+## Hessian positive definite, eigenvalue range [2.140334,2.140334].
+## Model rank =  100 / 100 
+## 
+## Basis dimension (k) checking results. Low p-value (k-index&lt;1) may
+## indicate that k is too low, especially if edf is close to k'.
+## 
+##          k'   edf k-index p-value
+## s(pz) 99.00  7.16    1.01    0.79
+```
+
+
+---
+
+
+# Choosing K
+
+We can also use `gam.check` for assessing the choice of `k`. 
+
+- GAM models have built in penalties to avoid overly complex models
+
+- So the choice of `k` is really about not under-smoothing
+
+- If the k-index is very low, you have likely under-smoothed
+
+---
+
+# Model Summary
+
+
+```r
+summary(fit)
+```
+
+```
+## 
+## Family: binomial 
+## Link function: logit 
+## 
+## Formula:
+## called ~ s(pz, k = 100)
+## 
+## Parametric coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)   0.2257     0.1506   1.499    0.134
+## 
+## Approximate significance of smooth terms:
+##         edf Ref.df Chi.sq p-value    
+## s(pz) 7.155  9.071    118  &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## R-sq.(adj) =  0.245   Deviance explained =   21%
+## fREML = 1561.2  Scale est. = 1         n = 1125
+```
+
+---
+
+# Expanding the Model
+
+Let's add interactions between the horizontal and vertical height, then fit another model that add a term with interactions in lateral and vertical velocity. 
+
+
+```r
+fit1 &lt;- bam(called ~ s(px, pz, k = 100),
+           family = "binomial",
+           data = strikes)
+
+fit2 &lt;- bam(called ~ s(px, pz, k = 100) + 
+               s(vy0, vz0, k = 100),
+           family = "binomial",
+           data = strikes)
+```
+
+---
+
+# Model Selection
+
+After checking the model diagnostics, we can compare the improvement across models using the AIC. Lower AIC indicates an improved fit.
+
+
+```r
+AIC(fit, fit1, fit2)
+```
+
+```
+##             df      AIC
+## fit   8.510921 1187.674
+## fit1 29.462074 1138.932
+## fit2 51.157191 1043.783
+```
+
+
+---
+
+# Predictions
+
+The `vis.gam` function is especially useful for showing the results of the model fit. Here we look at the predictions for a called strike vs a swinging strike in relation to the position over the plate.
+
+
+```r
+vis.gam(
+  fit2,
+  plot.type = "contour",
+  type = "response"
+)
+```
+
+---
+
+
+![](gam_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+
+---
+  
+
+# Problem: Predictions
+
+1. Use the `view` variable to change the `vis.gam` to show the results in relation to the lateral velocity and vertical height
+
+2. What is your interpretation?
+
+
+---
+
+# Solution: Predictions
+
+
+```r
+vis.gam(
+  fit2,
+  view = c("vy0", "pz"),
+  plot.type = "contour",
+  type = "response"
+)
+```
+
+
+---
+
+![](gam_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+
+---
+  
+
+  
+# Resources
+
+- http://cpsievert.github.io/pitchRx/RJwrapper.pdf
+
+- Albert, Jim. Visualizing Baseball. CRC Press, 2017.
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

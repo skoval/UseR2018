@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Part 2. Web Scraping</title>
+    <meta charset="utf-8">
+    <meta name="author" content="satRday 2018, Cape Town" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="duke_color_pallettes_slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Part 2. Web Scraping
+## The Sport Statistician’s Toolbox in R
+### satRday 2018, Cape Town
+
+---
+
+
+
+
+
+
+
+# Ways of Getting Sports Data
+
+If you need to gather sports data from the Web yourself, some common ways of importing the data into R include:
+
+--
+
+- Importing a data file directly from a Website
+
+--
+
+- Scraping from the underlying source code, which can come in two basic flavors:
+
+  1. Extraction from HTML for static data
+  
+  2. Extraction through automated browsing for data that is generated dynamically
+
+---
+
+
+
+# Import Data File
+
+--
+
+- Some sites, like [Baseball-Reference.com](http://www.baseball-reference.com), provide tools for creating exportable reports.
+
+--
+
+- In general, we want to avoid manual data collection and automate wherever possible because: *automation = efficiency*
+
+--
+
+- Sports data that is on the Web as an importable file can be imported with `read.table` or similar import function in R if we can determine it's URL
+
+---
+
+
+
+# Import Data File
+
+- What are "importable" files? 
+
+--
+
+- Common types include:
+
+--
+
+  - txt
+  - csv
+  - xls
+  - Anything else you can read with `read.table` or specialty imports
+  
+
+---
+
+
+
+# Example: Import Data File
+
+Here we extract the most recent Australian Open match results and betting odds using `read.csv`.
+
+
+```r
+url &lt;- "http://www.tennis-data.co.uk/2017/ausopen.csv"
+
+read.csv(url)
+```
+
+---
+
+
+
+# Practice: Import Data File
+
+How do you think you would obtain the same data from the last US Open? 
+
+--
+
+1. Give it a try.
+
+2. Read in the data.
+
+3. Determine the number of matches included.
+
+---
+
+
+
+# Solution: Import Data File
+
+
+
+```r
+url &lt;- "http://www.tennis-data.co.uk/2016/usopen.csv"
+
+usopen &lt;- read.csv(url)
+
+nrow(usopen) # Number of matches
+```
+
+```
+## [1] 127
+```
+
+---
+
+
+
+# Web Scraping
+
+.cbox[
+### More often you will need to go "under the hood" and work directly with HTML/CSS to extract data from Websites.
+]
+
+---
+
+
+
+# Inspecting Web Pages
+
+
+- Before you can extract the data, you need to understand the site design and how the data is contained in it
+
+--
+
+- This means getting familiar with "View Source"
+
+--
+
+- I would recommend getting the "Developer" add-in with Google Chrome, which has an array of tools for inspecting the contents of Web Sites
+
+---
+
+
+
+# Viewing Source in Chrome
+
+![](view-source.png)
+
+---
+
+
+
+# Practice: Import Data File
+
+1. Navigate to http://www.basketball-reference.com/
+
+2. Use 'View Source' to find where the stats for the 'NBA Standings' are located
+
+3. What is the "id" associated with these data?
+
+
+---
+
+
+
+# Static vs Dynamic Data
+
+.cbox[
+### Understanding which tools you need to extract data from a Web site starts with determining if the data is _statically_ or _dynamically_ generated on the site.
+]
+
+&lt;br&gt;
+
+Web data is _static_ if you can see it in the source code. If it isn't there, it's _dynamic_.
+
+
+---
+
+# Practice: Static or Dynamic Data?
+
+1. Have a look at the Tennis Elo Ratings info at the following site:
+http://tennisabstract.com/reports/atp_elo_ratings.html
+
+2. Use View Source to determine if the Elo Ratings data are _static_ or _dynamic_.
+
+---
+
+# Solution: It's Static
+
+![](tennis_elo_ratings.png)
+
+
+---
+
+# Practice: Static or Dynamic Data?
+
+1. Now have a look at another _Tennis Astract_ page with stats on Roger Federer:
+http://www.tennisabstract.com/cgi-bin/player.cgi?p=RogerFederer
+
+2. Use View Source to determine if the Elo Ratings data are _static_ or _dynamic_.
+
+
+
+---
+
+# Solution: It's Dynamic
+
+![](tennis_abstract_federer.png)
+
+---
+
+
+
+# Scraping Static Data
+
+There are a few options for extracting static HTML data.
+
+1. `readLines` is an option if the data is _not_ nicely formatted, in other words, when there is a lack of structure
+
+2. More typically, the data is _nice_ (e.g. if it is contained in a HTML table or other predictable tag) and we can use scraping packages like `rvest` or `RCurl` to get the data in a format we can work with.
+
+---
+
+
+
+# Using `rvest`
+
+--
+
+- Suite of tools for scraping static Web data and putting them in easy-to-use objects (like data.frames)
+
+--
+
+- Works with `magrittr` and allows piping commands with `%&gt;%` operator
+
+--
+
+- Allows some browsing functionality
+
+--
+
+- Authored by Hadley Wickham
+
+---
+
+
+
+# Example: Scraping Box Scores
+
+In this example, we will use `rvest` to extract the Eastern Division Standings.
+
+First, we import the page content.
+
+
+```r
+library('rvest')
+
+# Creating object with the address
+url &lt;- 'http://www.basketball-reference.com/boxscores/'
+
+#Reading the code from the site
+webpage &lt;- read_html(url)
+```
+
+---
+
+
+
+# Example: Scraping Box Scores
+
+The `html_nodes` function is the work horse function for extracting specific elements of a site. We can specify the element we want using its CSS tag or using an XPATH selector.
+
+
+```r
+# Using the CSS table tag to get all tables
+data &lt;- webpage %&gt;%
+   html_nodes(css = 'table') %&gt;%
+   html_table()
+
+length(data) # List of multiple tables
+```
+
+```
+## [1] 25
+```
+
+
+---
+
+
+
+# Example: Scraping Box Scores
+
+Using an XPATH ([XML Path Language](https://en.wikipedia.org/wiki/XPath)) can help to make our extraction more specific, though the syntax is more opaque. 
+
+
+```r
+# Using an XPATH selector to get the specific table of interest
+data &lt;- webpage %&gt;%
+   html_nodes(xpath = '//*[@id="divs_standings_E"]') %&gt;%
+   html_table(header = T)
+
+head(data[[1]])
+```
+
+```
+##   Eastern Conference                 W                 L              W/L%
+## 1  Atlantic Division Atlantic Division Atlantic Division Atlantic Division
+## 2   Toronto Raptors*                47                17              .734
+## 3     Boston Celtics                45                20              .692
+## 4 Philadelphia 76ers                35                28              .556
+## 5    New York Knicks                24                41              .369
+## 6      Brooklyn Nets                20                45              .308
+##                  GB              PS/G              PA/G
+## 1 Atlantic Division Atlantic Division Atlantic Division
+## 2                 —             112.0             103.3
+## 3               2.5             104.4             100.1
+## 4              11.5             107.9             105.7
+## 5              23.5             103.8             107.1
+## 6              27.5             105.7             110.0
+```
+
+
+---
+
+
+
+# Practice: Static Data Extraction
+
+Let's go back to the Elo ratings of male tennis players: [Tennis Abstract Elo](http://tennisabstract.com/reports/atp_elo_ratings.html)
+
+--
+
+1. Use your View Source tools to determine the element containing the ratings
+
+2. Use `rvest` to scrape the data as efficiently as you can
+
+---
+
+
+
+
+# Solution: Elo Rating Extraction
+
+![](tennis-elo.png)
+
+---
+
+
+
+
+# Solution: Elo Rating Extraction
+
+
+```r
+url &lt;- "http://tennisabstract.com/reports/atp_elo_ratings.html"
+
+page &lt;- read_html(url)
+
+# Use table class to extract Elo table
+elo &lt;- page %&gt;%
+    html_nodes("table.tablesorter") %&gt;%
+    html_table()
+
+head(elo)
+```
+
+```
+## [[1]]
+##     Rank                      Player  Age    Elo      Hard   Clay  Grass
+## 1      1              Novak Djokovic 30.7 2419.9 NA 2360.9 2356.3 2182.1
+## 2      2               Roger Federer 36.5 2399.5 NA 2353.8 2130.8 2151.7
+## 3      3                 Andy Murray 30.1 2318.6 NA 2264.5 2206.6 2139.6
+## 4      4                Rafael Nadal 31.6 2314.6 NA 2182.3 2409.7 1890.7
+## 5      5       Juan Martin Del Potro 29.4 2168.5 NA 2099.0 2065.0 1838.5
+## 6      6               Kei Nishikori 28.1 2160.4 NA 2085.0 2106.3 1855.5
+## 7      7             Grigor Dimitrov 26.7 2157.0 NA 2102.6 1850.4 1788.3
+## 8      8                Nick Kyrgios 22.8 2143.8 NA 2091.6 1910.6 1795.1
+## 9      9                David Goffin 27.2 2121.3 NA 2020.9 2019.5 1703.8
+## 10    10            Alexander Zverev 20.8 2112.9 NA 1996.6 2066.9 1853.7
+## 11    11          Stanislas Wawrinka 32.9 2100.9 NA 2026.6 2138.2 1726.1
+## 12    12          Jo Wilfried Tsonga 32.8 2096.6 NA 2024.5 2005.7 1881.3
+## 13    13                Milos Raonic 27.1 2094.4 NA 2024.9 2004.5 1926.5
+## 14    14                 Marin Cilic 29.4 2085.1 NA 1965.1 1968.4 1983.3
+## 15    15               Tomas Berdych 32.4 2080.3 NA 1989.4 2028.4 1868.3
+## 16    16                Gael Monfils 31.5 2054.7 NA 2018.9 1942.4 1762.6
+## 17    17             Richard Gasquet 31.6 2047.0 NA 1954.4 2007.6 1823.9
+## 18    18               Dominic Thiem 24.5 2043.7 NA 1868.6 2203.0 1689.4
+## 19    19 Diego Sebastian Schwartzman 25.5 2023.9 NA 1888.2 1924.9 1295.2
+## 20    20                 Kyle Edmund 23.0 2008.3 NA 1945.4 1760.2 1406.4
+## 21    21               Andrey Rublev 20.3 2005.7 NA 1929.1 1697.6 1557.2
+## 22    22              Kevin Anderson 31.7 2005.3 NA 1896.2 1887.8 1778.2
+## 23    23       Roberto Bautista Agut 29.9 2004.0 NA 1946.4 1871.9 1792.0
+## 24    24                 Hyeon Chung 21.8 2000.6 NA 1895.2 1852.0 1449.4
+## 25    25               Fabio Fognini 30.7 1991.3 NA 1921.2 1884.1 1664.2
+## 26    26               Damir Dzumhur 25.8 1987.1 NA 1932.5 1605.2 1544.5
+## 27    27               Lucas Pouille 24.0 1981.7 NA 1901.8 1855.2 1724.6
+## 28    28       Philipp Kohlschreiber 34.3 1974.6 NA 1845.1 1951.0 1784.2
+## 29    29                   Jack Sock 25.4 1972.0 NA 1906.1 1866.0 1630.6
+## 30    30             Karen Khachanov 21.7 1968.5 NA 1848.3 1838.3 1695.8
+## 31    31                  John Isner 32.8 1965.0 NA 1878.5 1869.9 1798.0
+## 32    32                David Ferrer 35.9 1961.9 NA 1893.8 2017.3 1677.0
+## 33    33         Alexandr Dolgopolov 29.2 1948.0 NA 1844.4 1881.9 1677.3
+## 34    34             Peter Gojowczyk 28.6 1945.9 NA 1886.4 1403.2 1600.2
+## 35    35               Gilles Muller 34.8 1941.9 NA 1789.8 1718.9 1894.4
+## 36    36                 Sam Querrey 30.4 1941.1 NA 1824.4 1753.1 1843.4
+## 37    37                 Mirza Basic 26.6 1939.2 NA 1892.5 1385.6 1506.6
+## 38    38             Feliciano Lopez 36.4 1931.6 NA 1772.4 1829.5 1898.0
+## 39    39             Daniil Medvedev 22.0 1926.2 NA 1815.3 1473.8 1753.5
+## 40    40           Fernando Verdasco 34.3 1918.9 NA 1793.5 1904.8 1671.5
+## 41    41            Adrian Mannarino 29.6 1917.9 NA 1813.0 1619.2 1716.8
+## 42    42            Marcos Baghdatis 32.6 1917.7 NA 1853.4 1612.2 1716.2
+## 43    43                Aljaz Bedene 28.6 1907.8 NA 1695.1 1846.6 1669.1
+## 44    44              Radek Stepanek 38.1 1898.3 NA 1813.9 1744.6 1739.3
+## 45    45                Gilles Simon 33.1 1892.4 NA 1853.2 1779.3 1681.0
+## 46    46                  Tommy Haas 39.3 1889.0 NA 1845.4 1830.2 1766.2
+## 47    47            Julien Benneteau 36.2 1888.0 NA 1824.2 1618.6 1612.7
+## 48    48          Yoshihito Nishioka 22.3 1886.9 NA 1820.7 1495.5 1398.8
+## 49    49             Nicolas Almagro 32.1 1885.8 NA 1754.6 1902.5 1611.5
+## 50    50                 Borna Coric 21.2 1883.8 NA 1759.9 1829.5 1406.9
+## 51    51              Francis Tiafoe 20.1 1881.3 NA 1820.7 1364.4 1549.1
+## 52    52              Leonardo Mayer 30.8 1879.0 NA 1740.7 1859.8 1590.4
+## 53    53                 Juan Monaco 33.0 1878.6 NA 1742.4 1874.9 1570.0
+## 54    54               Andreas Seppi 34.0 1875.0 NA 1798.7 1750.1 1718.6
+## 55    55                Benoit Paire 28.7 1870.9 NA 1772.5 1762.4 1645.4
+## 56    56              Viktor Troicki 32.0 1868.3 NA 1799.1 1775.1 1587.6
+## 57    57         Pablo Carreno Busta 26.6 1865.5 NA 1745.8 1900.2 1393.5
+## 58    58                Steve Darcis 33.7 1864.6 NA 1770.5 1737.7 1644.0
+## 59    59               Ryan Harrison 25.8 1862.5 NA 1798.8 1564.9 1446.9
+## 60    60            Denis Shapovalov 18.9 1860.3 NA 1792.0 1546.0 1496.6
+## 61    61                Ivo Karlovic 39.0 1858.3 NA 1783.6 1689.5 1759.9
+## 62    62               Tommy Robredo 35.1 1854.1 NA 1809.6 1774.4 1600.3
+## 63    63           Federico Delbonis 27.4 1850.1 NA 1696.3 1849.5 1341.8
+## 64    64                John Millman 28.6 1849.3 NA 1762.7 1433.6 1611.1
+## 65    65                 Guido Pella 27.8 1847.9 NA 1744.3 1796.5 1392.7
+## 66    66          Taylor Harry Fritz 20.3 1846.8 NA 1786.6 1524.8 1423.5
+## 67    67                Pablo Cuevas 32.1 1844.3 NA 1709.3 1871.3 1576.0
+## 68    68                Albert Ramos 30.1 1839.8 NA 1695.9 1855.1 1562.3
+## 69    69          Jan Lennard Struff 27.8 1837.0 NA 1764.1 1656.3 1410.5
+## 70    70               Denis Istomin 31.4 1834.3 NA 1758.1 1682.7 1640.8
+## 71    71                 Robin Haase 30.9 1832.1 NA 1746.7 1733.3 1598.3
+## 72    72               Mischa Zverev 30.5 1830.4 NA 1714.8 1618.0 1689.3
+## 73    73            Marton Fucsovics 26.0 1829.3 NA 1678.7 1734.4 1377.5
+## 74    74              Jerzy Janowicz 26.9 1829.3 NA 1743.0 1650.7 1680.8
+## 75    75               Steve Johnson 28.2 1826.4 NA 1755.1 1768.3 1725.5
+## 76    76               Bernard Tomic 25.0 1824.2 NA 1757.6 1591.3 1732.9
+## 77    77                Daniel Evans 27.0 1818.5 NA 1789.2 1569.8 1524.8
+## 78    78               Nicolas Mahut 36.1 1809.5 NA 1733.1 1609.3 1726.8
+## 79    79              Simone Bolelli 32.0 1809.0 NA 1634.4 1834.0 1659.7
+## 80    80            Filip Krajinovic 26.0 1805.9 NA 1772.8 1524.1 1480.1
+## 81    81           Mikhail Kukushkin 30.2 1805.8 NA 1760.3 1589.2 1501.6
+## 82    82                 Jiri Vesely 24.6 1805.2 NA 1663.6 1798.5 1577.8
+## 83    83               Martin Klizan 28.6 1803.8 NA 1708.7 1800.0 1445.2
+## 84    84            Andrey Kuznetsov 26.6 1802.2 NA 1656.6 1770.6 1508.6
+## 85    85               Andrej Martin 28.4 1800.3 NA 1490.1 1769.4 1480.0
+## 86    86               Yuichi Sugita 29.4 1799.5 NA 1666.0 1638.0 1658.5
+## 87    87            Janko Tipsarevic 33.2 1795.1 NA 1787.4 1703.9 1664.6
+## 88    88                Donald Young 28.6 1787.4 NA 1719.6 1492.3 1566.6
+## 89    89             Jarkko Nieminen 35.0 1786.2 NA 1701.1 1699.4 1540.8
+## 90    90                 Yen Hsun Lu 34.1 1784.0 NA 1706.1 1480.8 1624.6
+## 91    91               Jeremy Chardy 31.0 1783.9 NA 1691.7 1799.2 1578.7
+## 92    92                Marius Copil 27.3 1783.6 NA 1756.4 1595.1 1415.9
+## 93    93             Ruben Bemelmans 30.1 1783.5 NA 1689.4 1418.1 1535.2
+## 94    94          Thanasi Kokkinakis 21.8 1782.1 NA 1682.0 1530.6 1527.2
+## 95    95             Jared Donaldson 21.4 1782.0 NA 1694.7 1508.4 1438.6
+## 96    96               Jurgen Melzer 35.9 1781.2 NA 1712.7 1701.2 1666.4
+## 97    97               Florian Mayer 34.4 1778.3 NA 1656.8 1729.8 1802.9
+## 98    98              Ernests Gulbis 29.4 1777.2 NA 1673.5 1795.2 1572.3
+## 99    99               Nicolas Jarry 22.4 1776.2 NA 1515.4 1780.4 1470.1
+## 100  100     Roberto Carballes Baena 24.9 1775.5 NA 1427.4 1772.6      -
+## 101  101                 Lukas Rosol 32.2 1775.3 NA 1693.8 1701.8 1484.6
+## 102  102               Dusan Lajovic 27.6 1769.1 NA 1671.6 1718.2 1514.0
+## 103  103             Albert Montanes 36.4 1767.4 NA 1552.9 1754.7 1456.1
+## 104  104                   Dudi Sela 32.9 1767.2 NA 1680.5 1395.6 1658.9
+## 105  105                Dustin Brown 33.1 1764.2 NA 1650.4 1642.6 1625.9
+## 106  106           Ricardas Berankis 27.6 1757.5 NA 1741.9 1432.9 1259.7
+## 107  107      Edouard Roger Vasselin 32.6 1751.6 NA 1690.8 1582.2 1558.3
+## 108  108           Sergiy Stakhovsky 32.1 1751.3 NA 1668.6 1540.4 1636.8
+## 109  109                Gastao Elias 27.2 1750.3 NA 1471.2 1772.3 1393.8
+## 110  110                  Ivan Dodig 32.5 1749.2 NA 1589.6 1789.9 1632.5
+## 111  111             Thomaz Bellucci 30.1 1748.7 NA 1673.9 1707.5 1442.2
+## 112  112            Horacio Zeballos 32.8 1748.4 NA 1682.8 1715.7 1226.1
+## 113  113      Guillermo Garcia Lopez 34.7 1741.2 NA 1633.0 1767.8 1481.4
+## 114  114             Mikhail Youzhny 35.7 1740.6 NA 1713.4 1589.6 1674.6
+## 115  115              Vasek Pospisil 27.6 1740.5 NA 1697.9 1300.0 1536.0
+## 116  116                 Darian King 25.8 1740.5 NA 1711.6 1408.8      -
+## 117  117             Henri Laaksonen 25.8 1738.3 NA 1659.8 1635.7 1430.5
+## 118  118               Pablo Andujar 32.1 1732.9 NA 1524.9 1808.2 1329.1
+## 119  119                  Joao Sousa 28.9 1729.5 NA 1660.0 1720.7 1482.9
+## 120  120               Paolo Lorenzi 36.1 1725.0 NA 1614.3 1713.7 1286.7
+## 121  121                Tobias Kamke 31.2 1724.1 NA 1624.2 1690.7 1556.3
+## 122  122        Nikoloz Basilashvili 26.0 1718.3 NA 1686.6 1665.0 1516.9
+## 123  123       Pierre Hugues Herbert 26.9 1716.5 NA 1649.6 1582.2 1544.0
+## 124  124           Marcel Granollers 31.5 1710.1 NA 1640.3 1667.3 1513.3
+## 125  125            Santiago Giraldo 29.8 1709.9 NA 1610.3 1679.5 1511.7
+## 126  126            Thiemo De Bakker 29.4 1708.8 NA 1608.1 1729.9 1493.4
+## 127  127            Bjorn Fratangelo 24.6 1708.4 NA 1565.0 1604.6 1603.4
+## 128  128                 Lukas Lacko 30.3 1706.7 NA 1653.3 1423.5 1451.3
+## 129  129              Carlos Berlocq 35.0 1706.7 NA 1642.0 1663.0 1361.5
+## 130  130               Reilly Opelka 20.5 1703.9 NA 1685.0 1464.6 1429.8
+## 131  131                Yuki Bhambri 25.5 1702.7 NA 1615.4 1534.8      -
+## 132  132          Paul Henri Mathieu 35.7 1701.1 NA 1597.5 1716.2 1599.4
+## 133  133               Matthew Ebden 30.2 1700.3 NA 1573.8 1413.9 1568.8
+## 134  134              Nicolas Kicker 25.5 1698.2 NA 1493.2 1733.1 1471.6
+## 135  135                  Rajeev Ram 33.3 1697.0 NA 1609.2 1594.2 1581.7
+## 136  136               Jozef Kovalik 25.3 1695.6 NA 1693.4 1494.7 1478.2
+## 137  137             Thiago Monteiro 23.7 1692.8 NA 1472.5 1668.8 1523.8
+## 138  138         Ramkumar Ramanathan 23.3 1690.0 NA 1566.8      - 1538.1
+## 139  139                Malek Jaziri 34.1 1684.8 NA 1658.9 1591.7 1428.8
+## 140  140                Samuel Groth 29.7 1683.1 NA 1514.2 1523.1 1597.8
+## 141  141                 Tatsuma Ito 29.2 1682.5 NA 1586.0 1517.8 1543.5
+## 142  142        Daniel Gimeno Traver 30.9 1681.4 NA 1482.3 1676.4 1253.8
+## 143  143             Alejandro Falla 33.2 1681.4 NA 1626.2 1614.5 1548.5
+## 144  144             Benjamin Becker 35.8 1676.0 NA 1608.7 1494.5 1623.6
+## 145  145                 Casper Ruud 19.1 1674.2 NA 1481.0 1666.1      -
+## 146  146                  Radu Albot 28.3 1671.6 NA 1542.1 1576.6 1565.6
+## 147  147         Teymuraz Gabashvili 32.4 1669.7 NA 1573.3 1666.9 1394.5
+## 148  148              Evgeny Donskoy 27.8 1666.8 NA 1629.0 1368.2 1456.4
+## 149  149               Gerald Melzer 27.6 1666.3 NA 1398.0 1704.6      -
+## 150  150             Jordan Thompson 23.7 1665.6 NA 1582.8 1558.5 1435.1
+## 151  151                 Renzo Olivo 25.4 1665.6 NA 1437.3 1638.5 1445.6
+## 152  152              Michael Berrer 36.3 1664.9 NA 1644.9 1519.7 1454.4
+## 153  153                 Blaz Kavcic 31.0 1656.9 NA 1579.9 1601.7 1327.4
+## 154  154                 Denis Kudla 25.4 1655.3 NA 1541.2 1501.1 1542.7
+## 155  155             Illya Marchenko 29.9 1653.9 NA 1623.2 1443.6 1365.1
+## 156  156             Stephane Robert 37.1 1653.0 NA 1565.8 1629.0 1441.4
+## 157  157                    Go Soeda 33.1 1649.4 NA 1574.1 1511.6 1416.0
+## 158  158      Inigo Cervantes Huegun 27.2 1649.3 NA 1574.3 1610.1 1455.8
+## 159  159                 Tim Smyczek 30.0 1643.9 NA 1571.4 1517.8 1440.9
+## 160  160             Victor Estrella 37.5 1642.9 NA 1530.5 1707.5 1412.1
+## 161  161          Stefanos Tsitsipas 19.5 1641.6 NA 1585.9 1448.9 1433.8
+## 162  162             James Duckworth 25.0 1636.1 NA 1573.7 1466.2 1485.4
+## 163  163           Kenny De Schepper 30.7 1634.9 NA 1596.7 1449.0 1512.4
+## 164  164            Ernesto Escobedo 21.6 1633.8 NA 1569.2 1566.5 1441.1
+## 165  165                 Taro Daniel 25.1 1628.2 NA 1566.2 1542.7 1397.2
+## 166  166                Marsel Ilhan 30.0 1620.7 NA 1614.1 1472.1 1417.9
+## 167  167                    Ze Zhang 27.6 1613.7 NA 1497.3 1581.4 1521.8
+## 168  168                       Di Wu 26.4 1607.3 NA 1579.3 1424.7 1403.9
+## 169  169             Austin Krajicek 27.1 1602.7 NA 1597.6 1433.6 1419.8
+## 170  170               Igor Sijsling 29.0 1576.7 NA 1513.8 1512.7 1525.7
+## 171  171         Maximilian Marterer 22.7 1575.9 NA 1593.2 1416.8 1400.6
+## 172  172         Rogerio Dutra Silva 34.0 1574.4 NA 1541.4 1559.3 1317.7
+## 173  173                  Elias Ymer 21.8 1571.8 NA 1431.8 1599.6 1477.7
+## 174  174              Facundo Bagnis 28.0 1567.9 NA 1458.7 1560.0 1381.9
+## 175  175             Thomas Fabbiano 28.7 1566.0 NA 1518.7 1313.0 1495.3
+## 176  176                  Joao Souza 28.8 1543.3 NA 1435.5 1498.4 1441.8
+## 177  177          Alejandro Gonzalez 29.0 1536.7 NA 1513.9 1454.8 1390.0
+## 178  178                  Luca Vanni 31.8 1514.3 NA 1417.9 1556.8 1420.7
+## 179  179     Daniel Munoz De La Nava 34.5 1495.3 NA 1562.6 1415.0      -
+## 180  180              Norbert Gombos 27.5 1483.9 NA 1449.0 1449.3 1456.7
+## 181  181         Konstantin Kravchuk 32.6 1481.8 NA 1325.7 1612.4 1394.8
+## 182  182            Marco Cecchinato 25.4 1433.3 NA 1376.8 1430.5 1487.3
+##                           Peak Match Peak Age Peak Elo
+## 1   NA          2016 Miami Masters F     28.8   2570.6
+## 2   NA                  2007 Dubai F     25.6   2524.3
+## 3   NA                  2017 Doha SF     29.6   2438.7
+## 4   NA               2013 Beijing QF     27.3   2489.5
+## 5   NA                2009 US Open F     20.9   2352.3
+## 6   NA                 2016 Basel SF     26.8   2301.3
+## 7   NA        2014 Canada Masters QF     23.2   2190.3
+## 8   NA               2017 Madrid R32     22.0   2205.2
+## 9   NA                 2017 Rome R32     26.4   2129.1
+## 10  NA         2017 Canada Masters F     20.3   2248.6
+## 11  NA      2016 Australian Open R32     30.8   2232.2
+## 12  NA 2009 Indian Wells Masters R64     23.9   2257.7
+## 13  NA             2016 Wimbledon SF     25.5   2243.3
+## 14  NA                2010 Dubai R16     21.4   2194.3
+## 15  NA        2013 Miami Masters R16     27.5   2226.1
+## 16  NA                 2011 Halle QF     24.8   2171.0
+## 17  NA  2013 Monte Carlo Masters R16     26.8   2136.1
+## 18  NA                2016 Halle R16     22.8   2215.4
+## 19  NA         2018 Rio De Janeiro F     25.5   2023.9
+## 20  NA       2018 Australian Open QF     23.0   2023.0
+## 21  NA            2018 Rotterdam R16     20.3   2019.2
+## 22  NA     2015 Shanghai Masters R16     29.4   2093.0
+## 23  NA            2016 Rotterdam R16     27.8   2106.2
+## 24  NA         2018 Delray Beach R16     21.8   2032.8
+## 25  NA  2014 Monte Carlo Masters R32     26.9   2105.2
+## 26  NA              2017 Shenzhen QF     25.3   2006.2
+## 27  NA              2016 Beijing R32     22.6   2088.4
+## 28  NA            2009 Stuttgart R32     25.7   2086.2
+## 29  NA        2017 Miami Masters R16     24.5   2127.6
+## 30  NA               2017 Bastad R16     21.2   1996.9
+## 31  NA              2012 US Open R64     27.3   2147.2
+## 32  NA              2013 Acapulco SF     30.9   2313.1
+## 33  NA       2011 Costa Do Sauipe SF     22.3   2045.6
+## 34  NA          2018 Delray Beach SF     28.6   1977.3
+## 35  NA            2017 Wimbledon R16     34.2   2076.9
+## 36  NA        2012 Paris Masters R16     25.1   2048.1
+## 37  NA                  2018 Sofia F     26.6   1939.2
+## 38  NA             2005 Marseille QF     23.4   2039.3
+## 39  NA           2017 Washington R16     21.5   2003.0
+## 40  NA          2010 Rome Masters QF     26.4   2196.0
+## 41  NA               2018 Sydney R16     29.5   1961.1
+## 42  NA             2008 Marseille QF     22.7   2109.4
+## 43  NA       2018 Rio De Janeiro R16     28.6   1920.4
+## 44  NA        2009 Paris Masters R16     31.0   2109.8
+## 45  NA            2009 Rotterdam R32     24.1   2118.7
+## 46  NA       2002 Australian Open QF     23.8   2205.1
+## 47  NA             2013 Rotterdam SF     31.1   1985.8
+## 48  NA     2018 Australian Open R128     22.3   1918.6
+## 49  NA          2012 Davis Cup WG SF     27.1   2128.2
+## 50  NA               2016 Chennai SF     19.1   1972.9
+## 51  NA           2018 Delray Beach F     20.1   1881.3
+## 52  NA                2014 Hamburg F     27.2   1958.9
+## 53  NA      2012 London Olympics R64     28.3   2110.0
+## 54  NA      2013 Australian Open R32     28.9   1986.4
+## 55  NA                 2015 Tokyo SF     26.4   1988.2
+## 56  NA  2011 Monte Carlo Masters R32     25.2   2089.1
+## 57  NA       2017 Canada Masters R64     26.1   2048.2
+## 58  NA        2012 Winston-Salem R16     28.4   1976.9
+## 59  NA                2017 Memphis F     24.8   1905.1
+## 60  NA          2017 Davis Cup WG PO     18.4   1954.3
+## 61  NA        2007 Paris Masters R64     28.7   2090.1
+## 62  NA        2009 Roland Garros R16     27.1   2080.4
+## 63  NA               2013 Hamburg SF     22.8   1931.9
+## 64  NA         2016 Winston-Salem QF     27.2   1953.9
+## 65  NA               2017 Chengdu QF     27.4   1886.1
+## 66  NA         2018 Delray Beach R16     20.3   1869.4
+## 67  NA               2016 Hamburg SF     30.5   1980.1
+## 68  NA            2017 Barcelona R16     29.3   1960.0
+## 69  NA               2017 Vienna R16     27.5   1882.5
+## 70  NA            2014 Wimbledon R64     27.8   1934.4
+## 71  NA         2011 Winston-Salem QF     24.4   1943.6
+## 72  NA            2017 Stockholm R16     30.2   1925.6
+## 73  NA      2018 Australian Open R32     25.9   1872.5
+## 74  NA       2013 Canada Masters R32     22.7   2038.5
+## 75  NA               2017 Geneva R16     27.4   2014.1
+## 76  NA      2016 Australian Open R32     23.2   2019.1
+## 77  NA      2017 Australian Open R32     26.7   1958.3
+## 78  NA                  2007 Metz QF     25.7   1967.0
+## 79  NA        2008 Roland Garros R64     22.6   2013.2
+## 80  NA            2018 Marseille R16     26.0   1819.4
+## 81  NA         2010 St. Petersburg F     22.8   1993.1
+## 82  NA        2017 Roland Garros R64     23.9   1926.8
+## 83  NA             2015 Barcelona QF     25.8   1979.4
+## 84  NA               2016 Geneva R16     25.2   1960.2
+## 85  NA                 2018 Quito QF     28.4   1838.2
+## 86  NA   2017 Cincinnati Masters R16     28.9   1911.2
+## 87  NA              2012 US Open R16     28.2   2147.8
+## 88  NA        2017 Miami Masters R32     27.7   1934.6
+## 89  NA                2006 Bastad QF     25.0   2038.4
+## 90  NA        2016 Winston-Salem R16     33.0   1880.7
+## 91  NA               2009 Gstaad R16     22.5   2016.8
+## 92  NA      2015 s-Hertogenbosch R16     24.6   1826.7
+## 93  NA               2017 Antwerp QF     29.8   1825.3
+## 94  NA             2017 Los Cabos SF     21.3   1838.5
+## 95  NA              2017 Chengdu R16     21.0   1908.9
+## 96  NA        2010 Paris Masters R16     29.5   2047.9
+## 97  NA       2011 Roland Garros R128     27.6   2025.0
+## 98  NA         2014 Roland Garros QF     25.7   2136.3
+## 99  NA        2018 Rio De Janeiro QF     22.4   1790.3
+## 100 NA                  2018 Quito F     24.9   1810.2
+## 101 NA              2013 Bucharest F     27.7   1955.7
+## 102 NA             2017 Istanbul R16     26.8   1842.8
+## 103 NA             2001 Bucharest SF     20.8   1958.9
+## 104 NA               2009 Memphis QF     23.9   1934.1
+## 105 NA          2017 Montpellier R16     32.2   1910.6
+## 106 NA         2013 Delray Beach R16     22.7   1925.8
+## 107 NA        2014 Miami Masters R64     30.3   1921.8
+## 108 NA         2010 Kuala Lumpur R32     24.7   1986.2
+## 109 NA             2016 Olympics R64     25.7   1778.4
+## 110 NA             2011 Barcelona QF     26.3   2034.8
+## 111 NA              2010 Hamburg R16     22.6   2011.2
+## 112 NA               2010 Houston QF     24.9   1870.4
+## 113 NA     2010 Shanghai Masters R16     27.4   1963.6
+## 114 NA                 2007 Dubai SF     24.7   2110.2
+## 115 NA              2015 Valencia QF     25.3   1933.7
+## 116 NA          2017 Davis Cup G2 R3     25.4   1832.5
+## 117 NA              2017 Antwerp R32     25.5   1819.8
+## 118 NA              2011 Hamburg R64     25.5   1881.1
+## 119 NA      2016 Australian Open R64     26.8   1936.9
+## 120 NA              2017 Budapest QF     35.4   1835.2
+## 121 NA              2014 Hamburg R16     28.1   1810.9
+## 122 NA        2017 Roland Garros R64     25.3   1919.3
+## 123 NA         2015 Winston-Salem SF     24.4   1869.5
+## 124 NA               2011 Valencia F     25.6   2006.2
+## 125 NA               2012 Munich R32     24.4   1949.7
+## 126 NA             2010 New Haven QF     21.9   1971.0
+## 127 NA             2017 Us Open R128     24.1   1762.5
+## 128 NA                2012 Zagreb SF     24.2   1881.3
+## 129 NA                 2014 Nice R16     31.3   1929.1
+## 130 NA              2017 Memphis R32     19.5   1758.5
+## 131 NA           2017 Washington R16     25.1   1750.8
+## 132 NA                   2002 Lyon F     20.7   2114.5
+## 133 NA 2012 Indian Wells Masters R32     24.3   1925.4
+## 134 NA              2017 Hamburg R16     24.9   1838.9
+## 135 NA            2009 New Haven R32     25.4   1853.5
+## 136 NA                 2018 Sofia QF     25.3   1721.3
+## 137 NA               2016 Gstaad R16     22.1   1820.2
+## 138 NA              2017 Antalya R16     22.6   1723.2
+## 139 NA        2017 Miami Masters R64     33.2   1884.3
+## 140 NA        2015 Winston-Salem R64     27.8   1877.2
+## 141 NA      2012 s-Hertogenbosch R16     24.1   1765.7
+## 142 NA              2010 US Open R64     25.1   1872.6
+## 143 NA           2010 Washington R64     26.7   1850.3
+## 144 NA                 2006 Tokyo QF     25.3   1940.1
+## 145 NA        2017 Rio De Janeiro QF     18.2   1707.5
+## 146 NA          2015 Davis Cup G2 R1     25.3   1733.9
+## 147 NA           2009 Casablanca R16     23.9   1839.1
+## 148 NA                2015 Moscow QF     25.4   1772.2
+## 149 NA                2018 Quito R16     27.6   1704.4
+## 150 NA             2017 Us Open R128     23.4   1819.1
+## 151 NA                2016 Quito R16     23.9   1791.4
+## 152 NA                2012 Zagreb QF     31.6   1847.7
+## 153 NA       2011 Roland Garros R128     24.2   1793.2
+## 154 NA               2015 Atlanta QF     22.9   1810.3
+## 155 NA       2010 Miami Masters R128     22.5   1889.7
+## 156 NA           2010 Casablanca R32     29.9   1838.0
+## 157 NA               2012 Atlanta QF     27.9   1813.8
+## 158 NA       2016 Miami Masters R128     26.3   1790.9
+## 159 NA              2013 US Open R64     25.7   1796.4
+## 160 NA               2015 Munich R16     34.7   1917.8
+## 161 NA                 2018 Doha R16     19.4   1768.9
+## 162 NA                 2015 Nice R16     23.3   1747.1
+## 163 NA            2013 Wimbledon R32     26.1   1666.6
+## 164 NA               2017 Houston QF     20.8   1798.4
+## 165 NA       2017 Roland Garros R128     24.3   1726.2
+## 166 NA           2010 Wimbledon R128     23.0   1764.5
+## 167 NA          2016 Davis Cup G1 R2     26.0   1659.1
+## 168 NA          2015 Davis Cup G1 PO     24.0   1750.6
+## 169 NA     2016 Australian Open R128     25.6   1777.4
+## 170 NA              2013 Newport R16     25.9   1907.3
+## 171 NA                2018 Sofia R16     22.6   1597.8
+## 172 NA          2012 Davis Cup WG PO     28.6   1728.6
+## 173 NA            2015 Barcelona R32     19.0   1665.2
+## 174 NA            2016 Marrakech R16     26.1   1682.5
+## 175 NA                2016 Dubai R32     26.7   1626.5
+## 176 NA             2012 Santiago R16     23.7   1767.9
+## 177 NA              2014 Houston R32     25.2   1720.7
+## 178 NA       2015 Madrid Masters R64     29.9   1727.6
+## 179 NA         2013 Delray Beach R16     31.1   1686.1
+## 180 NA          2014 Davis Cup G1 R2     23.6   1604.0
+## 181 NA               2016 Gstaad R32     31.4   1654.1
+## 182 NA            2016 Bucharest R16     23.5   1494.7
+```
+
+---
+
+
+
+# Automated Browsing
+
+--
+
+- Because dynamic data is created on-the-fly (in response to user interactions) we have to browse to get access to it
+
+--
+
+- Fortunately, we can automate browsing 
+
+--
+
+- We just need to find what instructions to give to mimic the browsing that generates the data and get familiar with tools that can implement these instructions
+
+
+---
+
+
+
+# RSelenium
+
+--
+
+- _Selenium_ is software that allows automated Web browsing
+
+--
+
+- [RSelenium](https://cran.r-project.org/web/packages/RSelenium/index.html) is a package that provides Selenium functionality in R
+
+![](selenium_rc.png)
+
+---
+
+
+
+# RSelenium Installation
+
+- Although you can install and run RSelenium locally, you can save yourself a lot of pain by using RSelenium through _docker_.
+
+- Once _docker_ is installed there are many images available that are already setup with Selenium : https://hub.docker.com/u/selenium/
+
+![](docker.png)
+
+---
+
+
+
+# RSelenium: Basic Steps
+
+1. Set the Web driver (select browser and port)
+
+2. Find the elements with the data
+
+3. Extract the content
+
+4. Parse the contents
+
+---
+
+
+
+# Setting Up Docker
+
+1. We will use the `selenium/standalone-firefox` docker image in our examples
+
+2. Once docker is running, we can initiate this image on port 4445 with the code shown at the bottom. 
+
+3. We can now use RSelenium on port 4445
+
+
+
+```r
+docker run -d -p 4445:4444 selenium/standalone-firefox
+```
+
+---
+
+
+# Example: Tennis Match Statistics
+
+Consider the following match summary: [2017 Australian Open Final](http://www.flashscore.com/match/Cj6I5iL9/#match-statistics;0)
+
+
+![](aus-open-final.png)
+
+---
+
+
+
+
+# Example: Tennis Match Statistics
+
+If we inspect the page, we find that these stats are dynamic data. We also find that the main table of content has the id `detail`.
+
+![](aus-open-inspect.png)
+
+
+---
+
+# Using RSelenium
+
+Below we activate the driver on the designated docker port (using `L` to ensure it is treated as an integer)
+
+
+```r
+library(RSelenium) # Load the package
+
+# Match statistics URL
+url &lt;- "http://www.flashscore.com/match/Cj6I5iL9/#match-statistics;0"
+
+# Open driver
+remDr &lt;-remoteDriver(port = 4445L)
+
+remDr$open()
+
+remDr$navigate(url) # Navigate page
+```
+
+---
+
+# Using RSelenium
+
+Next we extract the table of stats using the CSS `id` node.
+
+
+```r
+# Get id element
+webElem &lt;- remDr$findElements(using = 'id', "detail")
+
+#  Use getElementText to extract the text from this element
+unlist(lapply(webElem, function(x){x$getElementText()}))[[1]]
+
+remDr$close() # Close driver when finished
+```
+
+---
+
+# Practice: RSelenium
+
+Take a look at the NFL Standings at: https://www.nfl.com/standings
+
+
+&lt;div style="margin-left: 15%;"&gt;
+&lt;img src="nfl_standings.png" width="80%" /&gt;
+&lt;/div&gt;
+
+
+---
+
+
+
+# Practice: RSelenium
+
+Use what we've covered about `RSelenium` to extract the statistics for the American Football Conference teams.
+
+1. Start by inspecting the Web site
+
+2. Determine which CSS element is most likely to contain the stats (Hint: search for 'American Football Conference')
+
+3. Create a remote driver, navigate to that element, and check if the text includes the numbers from the standings table.
+
+---
+
+
+# Solution: RSelenium
+
+Inspection of the source code suggests that the Element with `class` *rsv-ae9db127* is likely to contain the statistics.
+
+Now we navigate to the site.
+
+
+```r
+url &lt;- "https://www.nfl.com/standings"
+
+
+# Establish remote driver (using Firefox by default)
+remDr &lt;-remoteDriver(port = 4445L)
+remDr$open(silent = TRUE) # Supress any output messages
+remDr$navigate(url) # Navigate page
+```
+
+---
+
+
+# Solution: RSelenium
+
+Then we find the `class` element of interest and extract the text it contains.
+
+
+```r
+# Get id element
+
+webElem &lt;- remDr$findElements(using = "class", 
+    "rsv-ae9db127")
+
+# Use getElementText to extract
+# the text from this element
+unlist(lapply(webElem, function(x) {
+    x$getElementText()
+}))[29:35]
+```
+
+```
+## [1] "American Football Conference\nAFC East Team\nW L T PCT PF PA Net Pts Home Road Div Pct Conf Pct Non-Conf Streak Last 5\nNew England\nPatriots\n*\n13 3 0 .813 458 296 162 6-2-0 7-1-0 5-1-0 .833 10-2-0 .833 3-1-0 3W 4-1-0\nBuffalo\nBills\nx\n9 7 0 .563 302 359 -57 6-2-0 3-5-0 3-3-0 .500 7-5-0 .583 2-2-0 1W 3-2-0\nMiami\nDolphins\n6 10 0 .375 281 393 -112 4-4-0 2-6-0 2-4-0 .333 5-7-0 .417 1-3-0 3L 2-3-0\nNew York\nJets\n5 11 0 .313 298 382 -84 4-4-0 1-7-0 2-4-0 .333 5-7-0 .417 0-4-0 4L 1-4-0\nAFC North Team\nW L T PCT PF PA Net Pts Home Road Div Pct Conf Pct Non-Conf Streak Last 5\nPittsburgh\nSteelers\nz\n13 3 0 .813 406 308 98 6-2-0 7-1-0 6-0-0 1.000 10-2-0 .833 3-1-0 2W 4-1-0\nBaltimore\nRavens\n9 7 0 .563 395 303 92 5-3-0 4-4-0 3-3-0 .500 7-5-0 .583 2-2-0 1L 3-2-0\nCincinnati\nBengals\n7 9 0 .438 290 349 -59 4-4-0 3-5-0 3-3-0 .500 6-6-0 .500 1-3-0 2W 2-3-0\nCleveland\nBrowns\n0 16 0 .000 234 410 -176 0-8-0 0-8-0 0-6-0 .000 0-12-0 .000 0-4-0 16L 0-5-0\nAFC South Team\nW L T PCT PF PA Net Pts Home Road Div Pct Conf Pct Non-Conf Streak Last 5\nJacksonville\nJaguars\nz\n10 6 0 .625 417 268 149 6-2-0 4-4-0 4-2-0 .667 9-3-0 .750 1-3-0 2L 3-2-0\nTennessee\nTitans\nx\n9 7 0 .563 334 356 -22 6-2-0 3-5-0 5-1-0 .833 8-4-0 .667 1-3-0 1W 2-3-0\nIndianapolis\nColts\n4 12 0 .250 263 404 -141 3-5-0 1-7-0 2-4-0 .333 3-9-0 .250 1-3-0 1W 1-4-0\nHouston\nTexans\n4 12 0 .250 338 436 -98 3-5-0 1-7-0 1-5-0 .167 3-9-0 .250 1-3-0 6L 0-5-0\nAFC West Team\nW L T PCT PF PA Net Pts Home Road Div Pct Conf Pct Non-Conf Streak Last 5\nKansas City\nChiefs\nz\n10 6 0 .625 415 339 76 6-2-0 4-4-0 5-1-0 .833 8-4-0 .667 2-2-0 4W 4-1-0\nLos Angeles\nChargers\n9 7 0 .563 355 272 83 5-3-0 4-4-0 3-3-0 .500 6-6-0 .500 3-1-0 2W 4-1-0\nOakland\nRaiders\n6 10 0 .375 301 373 -72 4-4-0 2-6-0 2-4-0 .333 5-7-0 .417 1-3-0 4L 1-4-0\nDenver\nBroncos\n5 11 0 .313 289 382 -93 4-4-0 1-7-0 2-4-0 .333 4-8-0 .333 1-3-0 2L 2-3-0"
+## [2] "AFC East Team\nW L T PCT PF PA Net Pts Home Road Div Pct Conf Pct Non-Conf Streak Last 5\nNew England\nPatriots\n*\n13 3 0 .813 458 296 162 6-2-0 7-1-0 5-1-0 .833 10-2-0 .833 3-1-0 3W 4-1-0\nBuffalo\nBills\nx\n9 7 0 .563 302 359 -57 6-2-0 3-5-0 3-3-0 .500 7-5-0 .583 2-2-0 1W 3-2-0\nMiami\nDolphins\n6 10 0 .375 281 393 -112 4-4-0 2-6-0 2-4-0 .333 5-7-0 .417 1-3-0 3L 2-3-0\nNew York\nJets\n5 11 0 .313 298 382 -84 4-4-0 1-7-0 2-4-0 .333 5-7-0 .417 0-4-0 4L 1-4-0"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+## [3] "New England\nPatriots\n*"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+## [4] "New England\nPatriots"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+## [5] "New England\nPatriots"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+## [6] "*"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+## [7] "Buffalo\nBills\nx"
+```
+
+
+
+---
+
+
+
+# Summary
+
+- Web data can be classed into three main categories: directly importable, static, or dynamic
+
+- We can use Web developer tools to determine which data type we are working with and the site elements that contain the data
+
+- We have seen how we use tools like `rvest` to capture static Web data
+
+- For dynamic data, we can use automated browsing with `RSelenium` 
+
+---
+
+
+# Resources
+
+- [XPATH: https://www.w3schools.com/xml/xpath_intro.asp](https://www.w3schools.com/xml/xpath_intro.asp)
+
+- [rvest: https://www.r-bloggers.com/rvest-easy-web-scraping-with-r/](https://www.r-bloggers.com/rvest-easy-web-scraping-with-r/)
+
+- [RSelenium: https://ropensci.org/tutorials/rselenium_tutorial.html](https://ropensci.org/tutorials/rselenium_tutorial.html)
+
+- [docker: https://ropenscilabs.github.io/r-docker-tutorial/](https://ropenscilabs.github.io/r-docker-tutorial/)
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

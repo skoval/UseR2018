@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Publishing</title>
+    <meta charset="utf-8">
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="duke_color_pallettes_slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Publishing
+## Sharing Your Work with the World
+
+---
+
+
+
+
+
+class: slide-img
+
+# Publishing
+
+### One of the most popular and quick ways of sharing your ideas with the world is through *blogging*.
+
+&lt;div align="center"&gt;
+&lt;img src="big-data-and-sports.jpg" width=80%&gt;
+&lt;/div&gt;
+
+---
+
+# Getting There
+
+--
+
+- Starting a blog might seem overwhelming but, if you know `R` and some basic CSS, it's easy
+
+--
+
+- Producing interesting content is the tough part about blogging
+
+--
+
+- `R` helps to let you focus on _content_ by providing easy-to-use tools that solve the technical details of going from code to the Web 
+
+
+---
+
+# Blogdown
+
+--
+
+* Package for writing a blog in R 
+
+--
+
+* Create content with R markdown
+
+--
+
+* Generate site with `Hugo`
+
+--
+
+* Deploy on Github, Netlify, or other hosting services
+
+--
+
+* Authored by Yihui Xie (who is at the conference!)
+
+
+---
+
+# What is Hugo?
+
+.cbox[
+### Hugo is a static Web site generator with heaps of custom themes that make it simple to create a beautiful site.
+]
+
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+
+https://themes.gohugo.io
+
+---
+
+# About Hugo
+
+* Hugo works with any operating system in the same way
+
+* It handles many pages of content efficiently
+
+* Hugo (like `R`) also has a very active user community
+
+* *However*, Hugo is intended only for static sites where HTML content is fixed no matter what the user behavior
+
+---
+
+# Starting with Blogdown
+
+Install from CRAN:
+
+&lt;br&gt;
+
+
+```r
+install.packages("blogdown")
+```
+
+&lt;br&gt;
+
+Start reading the full book about working with Blogdown at https://bookdown.org/yihui/blogdown/
+
+---
+
+
+# Key Functions
+
+Here are the major functions you will use with `blogdown`.
+
+<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em;' >
+<thead>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Function</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr style='background-color: #ffffff;'>
+<td style='padding:2%; background-color: #ffffff; text-align: left;'>install_hugo</td>
+<td style='padding:2%; background-color: #ffffff; text-align: left;'>Downloads and installs Hugo</td>
+</tr>
+<tr style='background-color: #eeeeee;'>
+<td style='padding:2%; background-color: #eeeeee; text-align: left;'>install_theme</td>
+<td style='padding:2%; background-color: #eeeeee; text-align: left;'>Downloads a Hugo theme from github</td>
+</tr>
+<tr style='background-color: #ffffff;'>
+<td style='padding:2%; background-color: #ffffff; text-align: left;'>build_site</td>
+<td style='padding:2%; background-color: #ffffff; text-align: left;'>Compiles Rmd files and builds the site</td>
+</tr>
+<tr style='background-color: #eeeeee;'>
+<td style='padding:2%; background-color: #eeeeee; text-align: left;'>html_page</td>
+<td style='padding:2%; background-color: #eeeeee; text-align: left;'>Renders an Rmd file as an HTML that can be read by Hugo</td>
+</tr>
+<tr style='background-color: #ffffff;'>
+<td style='padding:2%; background-color: #ffffff; text-align: left;'>hugo_cmd</td>
+<td style='padding:2%; background-color: #ffffff; text-align: left;'>Run Hugo commands</td>
+</tr>
+<tr style='background-color: #eeeeee;'>
+<td style='padding:2%; background-color: #eeeeee; text-align: left;'>new_content</td>
+<td style='padding:2%; background-color: #eeeeee; text-align: left;'>Creates new file in working directory</td>
+</tr>
+<tr style='background-color: #ffffff;'>
+<td style='padding:2%; background-color: #ffffff; text-align: left;'>new_site</td>
+<td style='padding:2%; background-color: #ffffff; text-align: left;'>Creates enviroment for new site</td>
+</tr>
+<tr style='background-color: #eeeeee;'>
+<td style='padding:2%; background-color: #eeeeee; border-bottom: 2px solid grey; text-align: left;'>serve_site</td>
+<td style='padding:2%; background-color: #eeeeee; border-bottom: 2px solid grey; text-align: left;'>Preview working version of your site</td>
+</tr>
+</tbody>
+</table>
+
+
+---
+
+# Example Workflow
+
+1. Create a repo for your blog on Github (you need to have an account). Here is my example:
+
+&lt;div align="center"&gt;
+&lt;img src="github.png" width=80%&gt;
+&lt;/div&gt;
+
+---
+
+# Example Workflow
+
+
+2. Choose a directory for your repo and clone it there. Here, I put my repo under the path `/Software`:
+
+&lt;br&gt;
+
+![](terminal.png)
+
+---
+
+# Set Server Daemon
+
+--
+
+- By default, when running your site locally, your `R` session will be blocked
+
+--
+
+- To prevent this, you can use change your options `options(servr.daemon = FALSE)`
+
+--
+
+- You can do this at the start of each blogging session 
+
+--
+
+- _Or_ fix it permanently in your `.Rprofile` file
+
+---
+
+# Example Workflow
+
+
+3. In `R`, load `blogdown`
+
+4. Install Hugo
+
+5. `setwd` into the repo directory and create a new site
+
+
+```r
+library(blogdown)
+
+install_hugo() # On a Mac you need homebrew
+
+options(servr.daemon = FALSE) # If not in Rprofile
+
+# setwd() to blog directory
+
+new_site()
+```
+
+---
+
+# Starting Site
+
+You should see a browser open with the following default layout:
+
+![](site_page.png)
+
+
+---
+
+# Site Folders
+
+Also, if you look under your blog repo, you will see that a number of new folders were created. These are all the elements needed to get your site up and running.
+
+![](site-folders.png)
+
+---
+
+
+# Choosing a New Theme
+
+
+* The default theme for the site is `Lithium`
+
+* To set your own style, you can choose from hundreds of other themes
+ at [themes.gohugo.io](http://themes.gohugo.io/) 
+ 
+* When you find one you like you can add it to your site with `install_theme`
+
+&lt;div align="center"&gt;
+&lt;img src="hugo_themes.png" width=50%&gt;
+&lt;/div&gt;
+
+
+---
+
+# Example: Install Theme
+
+In this example, I add theme `mainroad`:
+
+
+```r
+install_theme('vimux/mainroad',
+	theme_example = TRUE, 
+	update_config = TRUE
+)
+```
+
+---
+
+# Example: Install Theme
+
+I can preview the site with the `serve_site`. Here is what the new theme looks like:
+
+![](mainroad.png)
+
+
+---
+
+# Configuring Site
+
+In your blog repo, you will see a `config.toml` file. This is where you can update the elements on your main page (which will be `index.html`). Below I've highlighted some fields to update with the `Mainroad` config file.
+
+&lt;div align="center"&gt;
+&lt;img src="config.png" width=80%&gt;
+&lt;/div&gt;
+
+
+---
+
+# New Configuration 
+
+![](config-update.png)
+
+---
+
+# Updated Site
+
+![](site-updates.png)
+
+---
+
+# Creating New Post
+
+You can generate new posts in R markdown (or markdown) files using `new_post`. Here is an example.
+
+
+```r
+new_post(
+	title = "French Open 2017",
+	kind = "default"
+)
+```
+
+---
+
+# Creating a New Post
+
+This will open an editor, where you can enter any additional meta-data and start to create content, just like you would with `R` markdown.
+
+![](new-post.png)
+
+---
+
+# Location of New Post
+
+The post will exist under the `content/post` folder.
+
+![](new-post-file.png)
+
+---
+
+# Site Update
+
+If you have your interactive session open, the site will automatically update with the post.
+
+![](new-post-server.png)
+
+---
+
+# Deploying
+
+1. When you are ready to publish your site, you can use the `build_site(local = FALSE)` function, which compiled Rmd and runs Hugo to prepare your site for publication.
+
+2. You will need to select a service for hosting your site. There are many options, like:
+  - [Netlify](https://www.netlify.com/)
+  - [Github IO](https://pages.github.com/)
+  - [Updog](https://updog.co/)
+  
+3. When you have a domain, you will need to update `baseurl` in your config before running `build_site`.
+
+---
+
+# Useful Add-ons
+
+1. Contact page
+
+2. Comments
+
+3. Google search
+
+---
+
+# Contact
+
+For a simple page with your email contact, you can create a markdown file like so:
+
+![](contact.png)
+
+--
+
+- Store under content/post
+
+- Use the menu 'main' to make it appear on the main page menu
+
+---
+
+# Comments
+
+Comments aren't the greatest thing the Internet has given us but you may still want feedback from readers on your site
+
+- `Disquis` is a popular comment service provider
+
+- Many Hugo themes like Mainroad provide automatic support
+
+- Just register your page there and then update your config.toml
+
+&lt;br&gt;
+
+&lt;div style="margin-left:15%;"&gt;
+&lt;img src="disquis.png" width=80% /&gt;
+&lt;/div&gt;
+
+---
+
+# Google Search
+
+- Once you are building content, it is a good idea to give your readers the ability to search content on your site
+
+- One way to do this is with Google site search 
+
+- Many themes will have built-in widgets to incorporate this search
+
+
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+
+*Note:* It can take a day or so for the site index to begin to populate
+
+---
+
+# Search Configuration
+
+![](search-config.png)
+
+---
+
+# Search Widget
+
+Under layouts/partials/widgets in Mainroad theme...
+
+![](search-widget.png)
+
+---
+
+# Embedding Visuals
+
+.pull-left[
+&lt;br&gt;
+&lt;br&gt;
+&lt;br&gt;
+
+- `img src` for local images
+
+- `iframe` for third party images
+]
+
+.pull-right[
+![](rainbow.gif)
+]
+
+---
+
+# Static
+
+- Sometimes you might create an image outside of R markdown that you want to include on your site
+
+- You can store these under 'public/img'
+
+- These can then be invoked with standard 'img src'
+
+&lt;br&gt;
+&lt;br&gt;
+
+
+```r
+&lt;div style="float:right;padding:2%;"&gt;
+&lt;img src="/img/my_image.png" width=30% /&gt;
+&lt;/div&gt;
+```
+
+---
+
+# Third Party Images
+
+These are images that exist on the Web. Some common types you might consider including are:
+
+- Getty images
+
+- Plotly charts
+
+- Entire shiny apps!
+
+--
+
+- All of this can be done with iframes
+
+
+---
+
+![](getty.png)
+
+---
+
+![](plotly1.png)
+
+
+---
+
+![](plotly2.png)
+
+---
+
+# Resources
+
+- [blogdown](https://bookdown.org/yihui/blogdown/)
+  - https://bookdown.org/yihui/blogdown/
+
+- [Git Commands](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html)
+  - https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

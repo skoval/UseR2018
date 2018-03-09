@@ -1,0 +1,637 @@
+---
+title: "Part 4. Modelling Sports Data - Forecasting"
+subtitle: "The Sport Statistician’s Toolbox in R"
+author: "satRday 2018, Cape Town"
+output:
+  xaringan::moon_reader:
+    css: ["default", "duke_color_pallettes_slides.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include = FALSE, message = FALSE}
+options(htmltools.dir.version = FALSE)
+
+library(deuce)
+library(dplyr)
+library(tidyr)
+library(ggthemes)
+library(ggplot2)
+library(scales)
+library(htmlTable)
+
+set.seed(1115808)
+```
+
+
+
+# Forecasting
+
+.pull-left[
+<h2 style="margin-top:15%;">Predicting the outcome of events is the obsession of most sports statisticians.</h2>
+]
+
+.pull-right[
+![](fortune_teller.gif)
+]
+
+
+---
+
+# Tennis Serve
+
+The tennis serve is one of the most important skills in tennis. Why?
+
+![](tennis_serve.gif)
+
+
+---
+
+```{r echo = FALSE, warning = FALSE, message = FALSE}
+library(ggjoy)
+
+data(atp_matches)
+
+points_on_serve <- atp_matches %>%
+    filter(!is.na(w_svpt), w_svpt > 0, tourney_level == "Grand Slams") 
+
+serve <- points_on_serve %>%
+    dplyr::mutate(
+      serve_pct = (w_1stWon +  w_2ndWon) / w_svpt,
+      return_pct = 1 - (l_1stWon +  l_2ndWon) / l_svpt,
+      diff = serve_pct - return_pct
+    )
+
+serve <- serve %>%
+    gather("type", "percent", serve_pct, return_pct)
+
+serve$type <- ifelse(serve$type == "serve_pct", "Serve", "Return")
+
+serve %>%
+    ggplot(aes(x = percent * 100, y = type, fill = type)) + 
+    geom_joy() +
+    scale_fill_tableau() + 
+    scale_y_discrete("Point Type") + 
+    scale_x_continuous("Win Percentage") + 
+    theme_joy() + theme(legend.position = "none")
+```
+
+---
+
+# What Makes a Great Server?
+
+
+<h3><i>I think it was all about him being able to get free points on his serve. He’s a top 10 player and in these decisive moments he could get some free points toward the end of the match.</i></h3>
+
+<h3>&mdash;Alex De Minaur on playing Alexander Zverev at Davis Cup 2018</h3>
+
+---
+
+# Free Points on Serve
+
+
+.pull-left[
+<img src="serena_serve.jpg" style='margin-top:2%;' />
+Aces
+]
+
+.pull-right[
+<img src="service_winner.png" />
+Service Winners 
+]
+
+---
+
+# Point Level Tennis Data
+
+The `deuce` package is a helpful resource for match, point, and shot-level data about tennis.
+
+It is available for download on github.
+
+```{r eval = FALSE}
+library(devtools)
+
+install_github('skoval/deuce')
+```
+
+---
+
+# Free Point Data
+
+The data set `gs_point_by_point` has point level data for men's and women's Grand Slams from 2011-2017. 
+
+- Every row corresponds to one point in a Grand Slam match
+
+- For 2017, all matches include a `RallyCount`, which we can use to derive an indicator for a free point on serve
+
+---
+
+# Problem: Preparing Data
+
+Using the `gs_point_by_point` data...
+
+1. Limit the dataset to 2017 men's matches
+
+2. Derive free point, server, and receiver variables
+
+3. Select the matchid, server, receiver, free point, and serve number variables
+
+<br>
+<br>
+
+Hint: A free point is a point won by the server with an ace or service winner
+
+---
+
+# Solution
+
+```{r}
+library(deuce)
+
+data(gs_point_by_point)
+
+men2017 <- gs_point_by_point %>%
+  filter(Tour == "atp", year == 2017) %>%
+  dplyr::mutate(
+    server = ifelse(PointServer == 1, player1, player2),
+    receiver = ifelse(PointServer == 1, player2, player1),
+    server_won = PointServer == PointWinner,
+		free_point = RallyCount <= 1 & server_won & 
+		    P1UnfErr == 0 & P2UnfErr == 0
+  ) %>%
+select(match_id, server, receiver, free_point, number = ServeNumber)
+```
+
+---
+
+# Problem
+
+1. Summarize the number and percentage of free points won for each server and match
+
+2. Where serve number is 0, assign this to a first serve
+
+3. Summarize separately for first and second serve
+
+4. Retain the name of the receiver in your dataset
+
+5. Plot the distribution of free point percentage by serve number
+
+---
+
+# Solution
+
+```{r}
+free_point <- men2017 %>%
+  dplyr::mutate(
+    number = ifelse(number == 0, 1, number)
+  ) %>%
+  group_by(match_id, server, number) %>%
+  dplyr::summarise(
+    opponent = receiver[1],
+    n = n(),
+    total = sum(free_point),
+    p = mean(free_point)
+  )
+```
+
+---
+
+```{r echo = FALSE}
+free_point %>%
+  ggplot(aes(x = p)) +
+  facet_wrap(~number) + 
+  geom_density() + 
+  scale_x_continuous("Free Point Proportion") +
+  theme_hc()
+```
+
+---
+
+# Player Differences
+
+Look at the density plots for the following players. What do they suggest?
+
+```{r echo = FALSE}
+free_point %>%
+  filter(server %in% c('John Isner','Andy Murray', 'Diego Schwartzman')) %>%
+  ggplot(aes(x = p)) +
+  facet_grid(server ~ number) + 
+  geom_density() + 
+  scale_x_continuous("Free Point Proportion") +
+  theme_hc()
+```
+
+---
+
+# Modelling Free Points
+
+A reasonable model for the free point outcomes treat free points as draws from a Binomial distribution with $n$ trials and success probability $p$.
+
+<br>
+
+$$
+Free Points \sim Binomial(p, n)
+$$
+
+<br>
+
+--
+
+But what determines $p$?
+
+---
+
+# Modelling Free Points
+
+From our exploratory graphs, the minimum variables that could influence the proportion of free points are:
+
+<br>
+<br>
+
+- The server's serve ability
+
+- The opponent's return ability
+
+- The serve number
+
+---
+
+# Regression Model 
+
+We will consider the following logistic regression model for the free point success proportion on first serve:
+
+<br>
+
+$$
+logit(p_{ij}) | First Serve = \mu + \alpha_i - \beta_j 
+$$
+
+<br>
+<br>
+
+- $\mu$ Average free point percentage
+
+- $\alpha_i$ Ability of the server
+
+- $\beta_j$ Ability of the receiver
+
+
+---
+
+# Problem: Prepare Data
+
+- Limit the dataset to first serves
+
+- Include serves with more than 1 match
+
+- Reserve some data for testing the model forecasts
+
+---
+
+# Solution: Prepare Data
+
+
+```{r}
+# Limit to first serve
+free_point <- free_point %>% filter(number == 1)
+
+# Limit to servers with multiple matches
+free_point <- free_point %>%
+    group_by(server) %>%
+    dplyr::mutate(
+      matches = n_distinct(match_id)
+    ) %>%
+    filter(matches > 1)
+
+# Assign test cases
+free_point <- free_point[sample(1:nrow(free_point)),]
+
+free_point <- free_point %>%
+    group_by(server) %>%
+    dplyr::mutate(
+      test = c(1, rep(0, n() - 1))      
+    )
+```
+
+
+---
+
+# Solution: Continued...
+
+```{r}
+free_point$j <- (1:n_distinct(free_point$server))[factor(free_point$server)]
+
+free_point$k <- (1:n_distinct(free_point$opponent))[factor(free_point$opponent)]
+
+# Train data
+trainData <- free_point %>% filter(test == 0)
+```
+
+---
+
+# Bayesian Model
+
+We have proposed a hierarchical model with server and receiver effects. This can be most readily implemented using a Bayesian multi-level model. Here are the distributional assumptions for our model:
+
+$$\mu \sim N(\mu_0, \sigma_0^2)$$
+
+$$\alpha_i \sim N(0, \sigma_\alpha^2)$$
+$$\theta_i \sim N(0, \sigma_\theta^2)$$
+All hyper-parameters will be given flat priors.
+
+---
+
+# Implementing in `rjags`
+
+
+```{r message = FALSE}
+library(rjags)
+
+modelString = "
+  model{
+
+    for(i in 1:N) {   
+      total[i] ~ dbinom(p[i], n[i])
+	  
+      logit(p[i]) <- mu + alpha[j[i]] - theta[k[i]]
+      }
+      
+     for(l in 1:J){
+      alpha[l] ~ dnorm(0, tau.sigma.alpha)
+     }
+	
+     for(l in 1:K){
+      theta[l] ~ dnorm(0, tau.sigma.theta)
+     }
+
+    mu ~ dnorm(mu0, tau.sigma.mu)
+    mu0 ~ dnorm(0, .001)
+
+ 	  tau.sigma.alpha <- pow(sigma.alpha, -2)
+ 	  sigma.alpha ~ dunif(0, 100)
+
+ 	  tau.sigma.theta <- pow(sigma.theta, -2)
+ 	  sigma.theta ~ dunif(0, 100)
+
+  	tau.sigma.mu <- pow(sigma.mu, -2)
+ 	  sigma.mu ~ dunif(0, 100)
+}
+"
+```
+
+---
+
+# Running Model on Training Data
+
+```{r message=FALSE}
+jags <- rjags::jags.model(textConnection(modelString),
+                   data = list('J' =  max(trainData$j),
+                   			   'K' =  max(trainData$k),
+                   			   'j' = trainData$j,
+                   			   'k' = trainData$k,
+                   			   'total' = trainData$total,
+                   			   'n' = trainData$n,
+                   			   'N' = nrow(trainData)
+                               ),
+                   n.chains = 3,
+                   n.adapt = 1000)
+
+update(jags, 1000)
+```
+
+---
+
+# Hyper-Parameter Convergence
+
+```{r}
+hyper.posterior <- coda.samples(jags, 
+                                c("mu"), 
+                                n.iter = 1000)
+
+traceplot(hyper.posterior)
+```
+
+---
+
+# Summarize Hyper-Parameters
+
+```{r}
+expit <- function(x) exp(x) / (1 + exp(x))
+
+summary(expit(hyper.posterior[[1]][,1]))
+```
+
+
+---
+
+# Problem: Player Parameters
+
+1. Obtain the serve and return parameters using `coda.samples`
+
+2. Calculate the posterior median for each player
+
+3. Plot the serve parameter against return
+
+4. Who are the strongest servers? Who are the strongest all-around?
+
+---
+
+# Solution: Player Posterior Parameters
+
+```{r}
+alpha.posterior <- coda.samples(jags, 
+                                "alpha",
+                                n.iter = 1000)
+
+
+alpha.posterior <- do.call("rbind", alpha.posterior)
+
+alpha.posterior <- as.data.frame(alpha.posterior) %>%
+  gather("player", "alpha", contains("alpha"))
+
+alpha.posterior$player  <- 
+  as.numeric(str_extract(alpha.posterior$player, "[0-9]+"))
+```
+
+---
+
+# Solution: Player Posterior Parameters
+
+```{r}
+theta.posterior <- coda.samples(jags, 
+                                "theta",
+                                n.iter = 1000)
+
+
+theta.posterior <- do.call("rbind", theta.posterior)
+
+theta.posterior <- as.data.frame(theta.posterior) %>%
+  gather("player", "theta", contains("theta"))
+
+theta.posterior$player <- 
+  as.numeric(str_extract(theta.posterior$player, "[0-9]+"))
+```
+
+
+---
+
+# Solution: Player Posterior
+
+```{r}
+alpha.median <- alpha.posterior %>%
+  group_by(player) %>%
+  dplyr::summarise(
+    alpha = median(alpha)
+  )
+
+theta.median <- theta.posterior %>%
+  group_by(player) %>%
+  dplyr::summarise(
+    theta = median(theta)
+  )
+
+combine <- merge(alpha.median, theta.median, by = "player")
+
+combine <- merge(combine, unique(ungroup(free_point) %>% 
+            select(name = server, player = j)), by = "player")
+```
+
+---
+
+# Solution: Player Posterior
+
+
+```{r echo = FALSE}
+combine %>%
+  ggplot(aes(y = alpha, x = theta))  +
+  geom_point() + 
+  geom_hline(yintercept = 0, col = "red") + 
+  geom_vline(xintercept = 0, col = "red") + 
+  geom_text(aes(label = name), size = 3, col = "#1792d0") + 
+  theme_hc()
+```
+
+---
+
+# What About Testing?
+
+- We can look at the validity of a method by collecting posterior predictions
+
+- The predictions can be collected at the time we run our model
+
+---
+
+# Model with Testing
+
+```{r}
+testData <- free_point %>% filter(test == 1)
+
+modelString = "
+  model{
+
+    for(i in 1:N) {   
+      total[i] ~ dbinom(p[i], n[i])
+
+      logit(p[i]) <- mu + alpha[j[i]] - theta[k[i]]
+    }
+
+  for(i in 1:M){
+      new.total[i] ~ dbinom(test.p[i], test.n[i])
+
+      logit(test.p[i]) <- mu + alpha[test.j[i]] - theta[test.k[i]]
+  }
+      
+  for(l in 1:J){
+      alpha[l] ~ dnorm(0, tau.sigma.alpha)
+    }
+	
+     for(l in 1:K){
+      theta[l] ~ dnorm(0, tau.sigma.theta)
+     }
+
+    mu ~ dnorm(mu0, tau.sigma.mu)
+    mu0 ~ dnorm(0, .001)
+
+ 	  tau.sigma.alpha <- pow(sigma.alpha, -2)
+ 	  sigma.alpha ~ dunif(0, 100)
+
+ 	  tau.sigma.theta <- pow(sigma.theta, -2)
+ 	  sigma.theta ~ dunif(0, 100)
+
+  	tau.sigma.mu <- pow(sigma.mu, -2)
+ 	  sigma.mu ~ dunif(0, 100)
+}
+"
+```
+
+---
+
+```{r}
+jags <- rjags::jags.model(textConnection(modelString),
+                   data = list('J' =  max(trainData$j),
+                   			   'K' =  max(trainData$k),
+                   			   'j' = trainData$j,
+                   			   'k' = trainData$k,
+                   			   'total' = trainData$total,
+                   			   'n' = trainData$n,
+                   			   'N' = nrow(trainData),
+                   			   'test.j' = testData$j,
+                   			   'test.k' = testData$k,
+                   			   'test.n' = testData$n,
+                   			   'M' = nrow(testData)
+                               ),
+                   n.chains = 3,
+                   n.adapt = 1000)
+
+update(jags, 1000)
+```
+
+---
+
+# Problem: Examine Accuracy
+
+- Use the posterior predictions to calculate the residuals of the predictions against their actual values
+
+- Plot a histogram of the results across all servers
+
+- What do these suggest about the model performance?
+
+---
+
+# Solution: Examine Accuracy
+
+
+```{r}
+accuracy <- coda.samples(jags, 
+                         "new.total",
+                          n.iter = 1000)
+
+accuracy <- do.call("rbind", accuracy)
+
+actual <- matrix(testData$total[order(testData$j)], 
+                 byrow = T, 
+                 nrow = nrow(accuracy),
+                 ncol = ncol(accuracy))
+
+accuracy <- accuracy - actual
+```
+
+---
+
+```{r echo = FALSE}
+hist(as.vector(accuracy), main = "Forecast Residuals", ylab = "Frequency", xlab = "Residual for Free Points (Test Data)")
+```
+
+---
+
+# Resources
+
+- https://martynplummer.wordpress.com/category/jags/
+
+- The BUGS Book: A Practical Introduction to Bayesian Analysis
+
+- http://www-math.bgsu.edu/~albert/bcwr/
