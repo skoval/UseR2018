@@ -1,7 +1,7 @@
 ---
-title: "Part 4. Modelling Sports Data - Forecasting"
-subtitle: "The Sport Statistician’s Toolbox in R"
-author: "satRday 2018, Cape Town"
+title: "Part 5. Sports Models - Forecasting with Bayes"
+subtitle: "Statistical Models for Sport in R"
+author: "useR 2018"
 output:
   xaringan::moon_reader:
     css: ["default", "duke_color_pallettes_slides.css"]

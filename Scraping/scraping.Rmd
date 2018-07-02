@@ -1,7 +1,7 @@
 ---
-title: "Part 2. Web Scraping"
-subtitle: "The Sport Statistician’s Toolbox in R"
-author: "satRday 2018, Cape Town"
+title: "Part 1. Web Scraping"
+subtitle: "Statistical Models for Sport in R"
+author: "useR 2018"
 output:
   xaringan::moon_reader:
     css: ["default", "duke_color_pallettes_slides.css"]
@@ -21,10 +21,50 @@ library(htmlTable)
 ```
 
 
+# About Me
+
+- Senior Data Scientist for Tennis Australia's Game Insight Group
+
+- Research Fellow at Victoria University
+
+- Tennis Blogger at [on-the-t.com](on-the-t.com)
+
+- @StatsOnTheT
+
+
+---
+
+
+# Tutorial Resources
+
+- Github: [github.com/skoval/satRday](github.com/skoval/satRday)
+
+- Contact: [s.a.kovalchik@gmail.com](s.a.kovalchik@gmail.com)
+
+---
+
+# Tutorial Outline
+
+Part 1. Web scraping
+
+--
+
+<i>SOME MODELS FOR SPORTS DATA</i>
+
+Part 2. Pythagorean Expectation
+
+Part 3. Paired Comparisons
+
+Part 4. GAM
+
+Part 5. Forecasting with Bayes
+
+
+---
 
 # Ways of Getting Sports Data
 
-If you need to gather sports data from the Web yourself, some common ways of importing the data into R include:
+As a sports statistician you will often need to gather data from the Web. Here are some common ways to get these data:
 
 --
 
@@ -36,7 +76,9 @@ If you need to gather sports data from the Web yourself, some common ways of imp
 
   1. Extraction from HTML for static data
   
-  2. Extraction through automated browsing for data that is generated dynamically
+  2. Importing the underlying data objects for dynamic pages (if possible)
+  
+  3. Extraction through automated browsing for data that is generated dynamically
 
 ---
 
@@ -134,7 +176,6 @@ nrow(usopen) # Number of matches
 ---
 
 
-
 # Inspecting Web Pages
 
 
@@ -142,7 +183,7 @@ nrow(usopen) # Number of matches
 
 --
 
-- This means getting familiar with "View Source"
+- This means getting familiar with "View Source" and "Developer Tools"
 
 --
 
@@ -352,17 +393,108 @@ head(elo)
 
 ---
 
+# Handling Dynamic Data 
+
+- Because dynamic data is created on-the-fly we can't simply read from the HTML to get those data
+
+--
+
+- There are <b>two</b> main ways we can deal with this:
+
+  1. Sleuth the underlying data objects
+  
+  2. Use automated browsing to make the dynamic problem a static problem
+
+---
+
+# Sleuthing
+
+.pull-left[
+- Dynamic data has to come from somewhere. 
+
+- Usually data is stored in a server and made available to JS functions via JSON/XML files.
+
+- If we can find and access those data files, our scraping dilemma is essentially solved.
+]
+
+.pull-right[
+![](inspector_gadget.gif)
+]
+
+---
+
+# Sleuth Principles
+
+1. If data is dynamic, fire up "Developer Tools"
+
+2. Select XHR for (XML HTTP Request) [This is where events happen]
+
+3. Make an event by selecting the data of interest
+
+4. Review requests and look for JSON/XML content in the "Response" field
+
+---
+
+# Example: World Cup Data
+
+![](football_world_cup.png)
+
+
+---
+
+
+# Example: World Cup Data
+
+![](football_xhr.png)
+
+---
+
+# Importing the Data
+
+With a URL location for the data file, JSON in this case, we can easily read in these data to R.
+
+```{r size=10}
+library(jsonlite) # Reading JSON files
+
+url <- "https://www.sofascore.com/tournament/3958/15586/standings/tables/json?"
+
+data <- fromJSON(url)
+
+data$teamEvents[[1]]$total
+```
+
+---
+
+# XHR Patterns
+
+Using the XHR info to get at the data objects behind dynamic pages, the scraping problem largely reduces to:
+
+1. Identifying patterns in the XHR
+2. Parsing the resulting objects
+
+--
+
+What do I mean by XHR pattern? Consider our Brazil example...what if we want another WC group?
+
+```{r}
+url <- "https://www.sofascore.com/tournament/GROUP/15586/standings/tables/json?"
+
+data <- fromJSON(sub("GROUP", 3959, url))
+
+data$teamEvents[[1]]$total
+```
+
+
+---
 
 
 # Automated Browsing
 
---
-
-- Because dynamic data is created on-the-fly (in response to user interactions) we have to browse to get access to it
+- Sadly, many dynamic sites will hide their backend data
 
 --
 
-- Fortunately, we can automate browsing 
+- But we can still deal with this!
 
 --
 
@@ -538,7 +670,7 @@ remDr$navigate(url) # Navigate page
 
 Then we find the `class` element of interest and extract the text it contains.
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=30)}
+```{r, tidy=TRUE, tidy.opts=list(width.cutoff=30), eval = T}
 # Get id element
 
 webElem <- remDr$findElements(using = 'class', "rsv-ae9db127")

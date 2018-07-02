@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Part 4. Modelling Sports Data - Forecasting</title>
+    <title>Part 5. Sports Models - Forecasting with Bayes</title>
     <meta charset="utf-8">
-    <meta name="author" content="satRday 2018, Cape Town" />
+    <meta name="author" content="useR 2018" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="duke_color_pallettes_slides.css" type="text/css" />
   </head>
@@ -11,9 +11,9 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Part 4. Modelling Sports Data - Forecasting
-## The Sport Statistician’s Toolbox in R
-### satRday 2018, Cape Town
+# Part 5. Sports Models - Forecasting with Bayes
+## Statistical Models for Sport in R
+### useR 2018
 
 ---
 
@@ -170,6 +170,3585 @@ free_point &lt;- men2017 %&gt;%
 
 ---
 
+
+```
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+```
+
 ![](service-winner_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 
 ---
@@ -177,6 +3756,145 @@ free_point &lt;- men2017 %&gt;%
 # Player Differences
 
 Look at the density plots for the following players. What do they suggest?
+
+
+```
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+
+## Warning: Groups with fewer than two data points have been dropped.
+```
 
 ![](service-winner_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
@@ -280,11 +3998,9 @@ free_point &lt;- free_point %&gt;%
 
 
 ```r
-free_point$j &lt;- (1:n_distinct(free_point$server))
-  [factor(free_point$server)]
+free_point$j &lt;- (1:n_distinct(free_point$server))[factor(free_point$server)]
 
-free_point$k &lt;- (1:n_distinct(free_point$opponent))
-  [factor(free_point$opponent)]
+free_point$k &lt;- (1:n_distinct(free_point$opponent))[factor(free_point$opponent)]
 
 # Train data
 trainData &lt;- free_point %&gt;% filter(test == 0)
@@ -316,7 +4032,7 @@ modelString = "
 
     for(i in 1:N) {   
       total[i] ~ dbinom(p[i], n[i])
-      
+	  
       logit(p[i]) &lt;- mu + alpha[j[i]] - theta[k[i]]
       }
       
@@ -415,12 +4131,12 @@ summary(expit(hyper.posterior[[1]][,1]))
 ##    plus standard error of the mean:
 ## 
 ##           Mean             SD       Naive SE Time-series SE 
-##      0.3800257      0.0121979      0.0003857      0.0034197 
+##      0.3818604      0.0081396      0.0002574      0.0014149 
 ## 
 ## 2. Quantiles for each variable:
 ## 
 ##   2.5%    25%    50%    75%  97.5% 
-## 0.3546 0.3723 0.3800 0.3870 0.4112
+## 0.3651 0.3771 0.3820 0.3876 0.3965
 ```
 
 

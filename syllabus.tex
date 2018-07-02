@@ -15,14 +15,13 @@
 \large
 
 \includegraphics[width=1in]{/Users/skovalchik/Courses/NCI-RTutorial/images/Rlogo}
-\textbf{\textcolor{gray}{The Sport Statistician's Toolbox in R}}
+\textbf{\textcolor{gray}{Statistical Models for Sport in R}}
 
 \textcolor{Rblue}{{\rule{\linewidth}{0.5mm}}}
 
-\textcolor{Rblue}{\bfseries satRday}
+\textcolor{Rblue}{\bfseries UseR! Brisbane}
 
-
-\textcolor{Rblue}{\bfseries March 2018}
+\textcolor{Rblue}{\bfseries July 2018}
 
 \textcolor{Rblue}{\bfseries Instructor:} Stephanie Kovalchik
 
@@ -31,8 +30,8 @@
 
 \textbf{\textcolor{Rblue}{Overview:}} \\
 
-I am very pleased you will be participating in the \emph{The Sport
-  Statistician's Toolbox} workshop. The workshop will cover a number
+I am pleased you will be participating in the \emph{Statistical
+  Models for Sport in R} tutorial. The tutorial will cover a number
 of skills and statistical models that are common in sports
 statistics and show how each can be implemented in
 \textcolor{Rblue}{\bfseries R}. The workshop will introduce
@@ -42,33 +41,49 @@ be used throughout. It will be very hands-on! \\
 
 After completing this workshop, participants will be able to gather
 and clean public sports data more effectively, explore data with
-graphics, apply several common models used in sport, and share their
-sports statistics ideas through a blog. \\
+graphics, and apply some common models used in sport. \\
 
-A brief outline of the workshop is given below. Further details and
-instructions will be sent to participants prior to the conference.
+A brief outline of the workshop is given below.
 
 \vskip .5in
 
-\textbf{\textcolor{Rblue}{Workshop Outline:}} \\
+\textbf{\textcolor{Rblue}{Tutorial Outline:}} \\
 
 
 \begin{itemize}
-\item Sports data resources
 \item Web scraping
-\item Data exploration and validation
 \item Sports models and real applications
 \begin{itemize}
 \item \emph{Bradley-Terry paired comparison models}. Application: Which team is the strongest in the  English Football Association League?
 \item \emph{Pythagorean Theorem}. Application: How can we predict an NBA teams
 expected wins for the season?
-\item \emph{Forecasting}. Application: What is the chance that a tennis
-serve will be a service winner?
 \item \emph{Generalized Additive Models}. Application: How can we model the strike zone from
 baseball tracking data?
+\item \emph{Forecasting}. Application: What is the chance that a tennis
+serve will be a service winner?
 \end{itemize}
-\item Sports Blogging
 \end{itemize}
+
+\vskip .5in
+
+\textbf{\textcolor{Rblue}{Preparing:}} \\
+
+Please bring a laptop with \textbf{\textcolor{Rblue}{R}} installed and
+install the following libraries via CRAN: dplyr, tidyr, ggplot2, rvest, jsonlite, stringr, mgcv, rjags,
+BradleyTerry2, lubridate, pitchRx 
+
+\vskip .5in
+
+These additional libraries should be installed via github using
+devtools:
+
+\begin{itemize}
+\item Rselenium (\url{https://github.com/ropensci/RSelenium})
+\item deuce (\url{https://github.com/skoval/deuce})
+\end{itemize}
+
+There will also be part of the Web scraping material that will require
+Docker, which you can install here: \url{https://docs.docker.com/install/}
 
 \vskip .5in
 

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Part 4. Modelling Sports Data - Generalized Additive Models</title>
+    <title>Part 4. Sports Models - Generalized Additive Models</title>
     <meta charset="utf-8">
-    <meta name="author" content="satRday 2018, Cape Town" />
+    <meta name="author" content="useR 2018" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="duke_color_pallettes_slides.css" type="text/css" />
   </head>
@@ -11,9 +11,9 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Part 4. Modelling Sports Data - Generalized Additive Models
-## The Sport Statistician’s Toolbox in R
-### satRday 2018, Cape Town
+# Part 4. Sports Models - Generalized Additive Models
+## Statistical Models for Sport in R
+### useR 2018
 
 ---
 
@@ -26,8 +26,7 @@ class: center, middle, inverse, title-slide
 # Tracking Data
 
 
-<img src="sportvu.jpg" width=80% />
-
+![](sportvu.jpg)
 
 ---
 
@@ -61,6 +60,24 @@ The `scrape` function is the main resource for importing pitcher tracking data f
 
 ```r
 pitches &lt;- scrape(start = "2015-08-01", end = "2015-08-01")
+```
+
+```
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_kcamlb_tormlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_tbamlb_bosmlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_anamlb_lanmlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_atlmlb_phimlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_detmlb_balmlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_arimlb_houmlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_chnmlb_milmlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_nyamlb_chamlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_pitmlb_cinmlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_sdnmlb_miamlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_seamlb_minmlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_wasmlb_nynmlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_colmlb_slnmlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_sfnmlb_texmlb_1/inning/inning_all.xml 
+## http://gd2.mlb.com/components/game/mlb/year_2015/month_08/day_01/gid_2015_08_01_clemlb_oakmlb_1/inning/inning_all.xml
 ```
 
 The `start` and `end` must both be in the `yyyy-mm-dd` format.
@@ -164,35 +181,6 @@ strikeFX(decisions, geom = "tile",
 
 ---
 
-# Problem: Strikes vs Balls
-
-- Modify `strikeFX` to compare balls and strikes
-
-- What is illustrated in the density estimates in this case?
-
----
-
-
-# Strikes vs Balls
-
-
-
-```r
-strikeFX(decisions, geom = "tile", 
-         density1 = list(des = "Called Strike"),
-         density2 = list(des = "Ball")) + 
-  theme_hc()
-```
-
----
-
-
-
-![](gam_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
-
-
----
-
 # Called Strike vs Other Strikes?
 
 Reading a pitch is an essential skill of batters. A `called strike` is a pitch the umpire determines to be in the strike zone but a pitched did not take a swing. Why?
@@ -221,7 +209,7 @@ Suppose we want to model what makes a pitch difficult to read? What should such 
 
 # More Trajectory Data
 
-In addition to the height and horizontal distances of the pitch, let's grab more information about the distances traveled, speed, and accelerations.
+In addition to the height and horizontal distances of the pitch, let's grab more information about the distances travelled, speed, and accelerations.
 
 
 ```r
@@ -254,49 +242,6 @@ table(strikes$called)
 ##   0   1 
 ## 415 710
 ```
-
----
-
-# Animate Pitches
-
-Let's use the `animateFX` to see how the trajectories of called and swung-at strikes might differ.
-
-
-
-```r
-strikes$called &lt;- factor(strikes$called)
-
-animateFX(strikes,
-          color = "called") 
-```
-
-
----
-
-# Pattern Interpretation
-
-The animation suggests that the height of the pitch might be especially important. What about speed? Let's focus just on the height and velocity in the vertical direction. 
-
-Run this plot and interpret the pattern you see.
-
-
-
-
-```r
-strikes %&gt;% 
-  ggplot(aes(y = vz0, x = pz, col = called)) + 
-  scale_y_continuous("Vertical Velocity") + 
-  scale_x_continuous("Height Over Plate") + 
-  geom_point() +
-  theme_hc() + 
-  scale_colour_tableau(name = "")
-```
-
----
-
-
-![](gam_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
-
 
 ---
 
@@ -381,7 +326,7 @@ gam.check(fit)
 
 ---
 
-![](gam_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+![](gam_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 
 ```
 ## 
@@ -499,7 +444,7 @@ vis.gam(
 ---
 
 
-![](gam_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+![](gam_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 
 ---
   
@@ -528,7 +473,7 @@ vis.gam(
 
 ---
 
-![](gam_files/figure-html/unnamed-chunk-25-1.png)&lt;!-- --&gt;
+![](gam_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
 
 ---
   

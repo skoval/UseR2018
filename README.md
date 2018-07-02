@@ -1,16 +1,11 @@
-# Material from 2018 satRday Conference: The Sport Statistician’s Toolbox in R 
+# Material from 2018 UseR Conference: Statistical Models for Sport in R
 
-The repo includes:
-
-- R markdown files and html slides from workshop
-
-- R markdown files and html slides from keynote
-
+The repo includes R markdown files and html slides for the tutorial.
 
 For attendees of the workshop, completing all of the examples will require that you have installed all of the following packages from CRAN:
 
 - rvest
-- RSelenium
+- jsonlite
 - dplyr
 - tidyr
 - stringr
@@ -22,11 +17,12 @@ For attendees of the workshop, completing all of the examples will require that 
 - pitchRx
 - mgcv
 - rjags
-- blogdown
 
 Install the following package from github:
 
 - deuce with `install_github('skoval/deuce')`
+
+- RSelenium with `install_github('ropensci/Rselenium')`
 
 Install the following additional software:
 
