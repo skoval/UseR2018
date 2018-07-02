@@ -149,7 +149,7 @@ Hint: A free point is a point won by the server with an ace or service winner
 
 # Solution
 
-```{r}
+```{r warning = F, message = F}
 library(deuce)
 
 data(gs_point_by_point)
@@ -184,7 +184,7 @@ select(match_id, server, receiver, free_point, number = ServeNumber)
 
 # Solution
 
-```{r}
+```{r warning = F, message = F}
 free_point <- men2017 %>%
   dplyr::mutate(
     number = ifelse(number == 0, 1, number)

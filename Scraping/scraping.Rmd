@@ -37,7 +37,7 @@ library(htmlTable)
 
 # Tutorial Resources
 
-- Github: [github.com/skoval/satRday](github.com/skoval/satRday)
+- Github: [github.com/skoval/UseR2018](https://github.com/skoval/UseR2018)
 
 - Contact: [s.a.kovalchik@gmail.com](s.a.kovalchik@gmail.com)
 
@@ -51,9 +51,9 @@ Part 1. Web scraping
 
 <i>SOME MODELS FOR SPORTS DATA</i>
 
-Part 2. Pythagorean Expectation
+Part 2. Paired Comparisons
 
-Part 3. Paired Comparisons
+Part 3. Pythagorean Expectation
 
 Part 4. GAM
 
