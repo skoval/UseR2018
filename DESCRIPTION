@@ -1,0 +1,27 @@
+Package: user2018skoval
+Title: Material from 2018 UseR Conference: Statistical Models for Sport in R
+Version: 1.0.0
+Author: Stephanie Kovalchik
+Depends:
+  rvest,
+  jsonlite,
+  dplyr,
+  tidyr,
+  stringr,
+  ggplot2,
+  ggthemes,
+  scales,
+  lubridate,
+  BradleyTerry2,
+  pitchRx,
+  mgcv,
+  rjags,
+  deuce,
+  RSelenium,
+  wdman,
+  binman
+Remotes:
+  skoval/deuce,
+  ropensci/RSelenium,
+  johndharrison/wdman,
+  johndharrison/binman
